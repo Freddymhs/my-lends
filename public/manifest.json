@@ -1,25 +1,101 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Lends",
+  "name": "Lends - Gestiona tus préstamos fácilmente",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "./icons//favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "icons/logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "icons/logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "icons/maskable_icon_x48.png",
+      "type": "icons/image/png",
+      "sizes": "48x48",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable_icon_x72.png",
+      "type": "image/png",
+      "sizes": "72x72",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable_icon_x96.png",
+      "type": "image/png",
+      "sizes": "96x96",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable_icon_x128.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/maskable_icon_x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/maskable_icon_x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "description": "Lends es una aplicación para gestionar tus préstamos de forma fácil y rápida.",
+  "screenshots": [
+    {
+      "src": "maskable_icon_x512.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    },
+    {
+      "src": "maskable_icon_x512.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Lends",
+      "short_name": "Préstamos",
+      "description": "Login de Lends",
+      "url": "/",
+      "icons": [
+        {
+          "src": "./icons/maskable_icon_x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Lends",
+      "short_name": "Préstamos",
+      "description": "lista de préstamos",
+      "url": "/lends",
+      "icons": [
+        {
+          "src": "./icons/maskable_icon_x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

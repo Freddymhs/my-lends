@@ -1,5 +1,7 @@
 import { onValue, push, ref, remove, set } from "firebase/database";
+import moment from "moment";
 import { database } from "./firebase-config";
+import { message } from "antd";
 
 const LEADS_REF = "/lends";
 const USERS_REF = "/users";
@@ -21,12 +23,25 @@ export const addNewItemToDatabase = async (newItem) => {
 
   try {
     await push(leadsRef, itemToAdd);
+    message.success({
+      content: "El elemento ha sido añadido exitosamente.",
+      duration: 4,
+      style: {
+        position: "fixed",
+        top: 10,
+        right: 10,
+        zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+        padding: "10px",
+        borderRadius: 4,
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+      },
+    });
   } catch (error) {
     handleDatabaseError("addNewItemToDatabase")(error);
   }
 };
 
-export const getDataFromFirebase = (callback) => {
+export const getDataFromFirebase = (callback, startDate, endDate) => {
   const leadsRef = ref(database, LEADS_REF);
 
   if (typeof callback !== "function") {
@@ -38,9 +53,18 @@ export const getDataFromFirebase = (callback) => {
     leadsRef,
     (snapshot) => {
       const data = snapshot.val();
-      const lends = data
+      let lends = data
         ? Object.entries(data).map(([id, value]) => ({ id, ...value }))
         : [];
+
+      // Aplicar filtro de fechas si se proporcionan startDate y endDate
+      if (startDate && endDate) {
+        lends = lends.filter((item) => {
+          const itemDate = moment(item.date, "DD-MM-YYYY").toDate();
+          return itemDate >= startDate && itemDate <= endDate;
+        });
+      }
+
       callback(lends);
     },
     (error) => {
@@ -79,7 +103,19 @@ export const deleteItemFromDatabase = async ({ id }) => {
 
   try {
     await remove(leadRef);
-    console.log("Leand borrado con éxito");
+    message.success({
+      content: "El item ha sido borrado exitosamente.",
+      duration: 4,
+      style: {
+        position: "fixed",
+        top: 10,
+        right: 10,
+        zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+        padding: "10px",
+        borderRadius: 4,
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+      },
+    });
   } catch (error) {
     handleDatabaseError("deleteItemFromDatabase")(error);
   }

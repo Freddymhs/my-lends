@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Tabs, List, Card, Descriptions, Button, Col, Row, Spin } from "antd";
+import { isMobile } from "react-device-detect";
 import {
   SwipeableList,
   TrailingActions,
@@ -9,7 +10,6 @@ import {
 import "react-swipeable-list/dist/styles.css";
 import { PlusOutlined } from "@ant-design/icons";
 import "./FloatingButton.css";
-import { auth } from "./firebase-config";
 import {
   addNewItemToDatabase,
   getDataFromFirebase,
@@ -18,18 +18,24 @@ import {
 } from "./helpers";
 import AddLoanModal from "./AddLoanModal";
 import LogoutDropdown from "./LogOutDropdown";
+import { Header } from "antd/es/layout/layout";
+import { UserContext } from "./UserContext";
+import DateRangeFilter from "./DateRangeFilter";
 
 const { TabPane } = Tabs;
 
 const Home = () => {
   const [users, setUsers] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { user, _ } = useContext(UserContext);
+  const { company } = user || {};
+  const { uid } = user || {};
   const [returnData, setReturnData] = useState([]);
   const [belongsData, setBelongsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const { currentUser } = auth || {};
-  const { uid } = currentUser || {};
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [dateRange, setDateRange] = useState([null, null]);
 
   useEffect(() => {
     let unsubscribeLeads = () => {};
@@ -38,13 +44,22 @@ const Home = () => {
     const loadData = async () => {
       if (uid) {
         setLoading(true);
-        unsubscribeLeads = getDataFromFirebase((lends) => {
-          const myLends = lends.filter((item) => item.from === uid);
-          const mybelongs = lends.filter((item) => item.to === uid);
-          setReturnData(myLends);
-          setBelongsData(mybelongs);
-          setLoading(false);
-        });
+        unsubscribeLeads = getDataFromFirebase(
+          (lends) => {
+            const myLends = lends.filter(
+              (item) => item.fromCompany === company
+            );
+            const mybelongs = lends.filter(
+              (item) => item.toCompany === company
+            );
+
+            setReturnData(myLends);
+            setBelongsData(mybelongs);
+            setLoading(false);
+          },
+          startDate,
+          endDate
+        );
 
         unsubscribeUsers = getUsersInFirebase((data) => {
           setUsers(data);
@@ -60,19 +75,29 @@ const Home = () => {
       unsubscribeLeads();
       unsubscribeUsers();
     };
-  }, [uid]);
+  }, [uid, startDate, endDate]);
+  const handleFilter = (newStartDate, newEndDate) => {
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
+  };
 
   const onCreate = (data) => {
     addNewItemToDatabase(data);
   };
-
-  const trailingActions = (data) => (
+  const trailingActions = (item) => (
     <TrailingActions>
       <SwipeAction
         destructive={true}
-        onClick={() => deleteItemFromDatabase(data)}
+        onClick={() => deleteItemFromDatabase(item)}
       >
-        <div style={{ backgroundColor: "blue", color: "white", padding: 10 }}>
+        <div
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            padding: 10,
+            fontSize: 18,
+          }}
+        >
           Borrar elemento
         </div>
       </SwipeAction>
@@ -96,40 +121,55 @@ const Home = () => {
 
   return (
     <div>
-      <Row>
-        <Col span={12}>
-          <h1>Mis Prestamos</h1>
-        </Col>
-        <Col span={12}>
-          <LogoutDropdown />
-        </Col>
-      </Row>
-
+      <Header style={{ background: "#fff", padding: 0 }}>
+        <Row justify="space-around" align="middle">
+          <Col>
+            <LogoutDropdown />
+          </Col>
+          <Col>
+            <h1>Mis Prestamos</h1>
+          </Col>
+        </Row>
+      </Header>
+      <br />
+      <br />
+      <DateRangeFilter
+        onFilter={handleFilter}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+      />
       <Tabs centered defaultActiveKey="1">
-        <TabPane tab="Me Deben" key="1">
+        <TabPane tab="Prestamos" key="1">
           <LoanList
             data={returnData}
             users={users}
             trailingActions={trailingActions}
             formatUser={formateUidToMail}
+            blockSwipe={false}
           />
         </TabPane>
-        <TabPane tab="Pedi Prestado" key="2">
+        <TabPane tab="Deudas" key="2">
           <LoanList
             data={belongsData}
             users={users}
             trailingActions={trailingActions}
             formatUser={formateUidFromMail}
+            blockSwipe={true}
           />
         </TabPane>
       </Tabs>
 
-      <div className="floating-button-container">
+      <div
+        className={
+          isMobile
+            ? "floating-button-container-mobile"
+            : "floating-button-container"
+        }
+      >
         <Button
+          className={isMobile ? "floating-button-mobile" : "floating-button"}
           type="primary"
-          shape="circle"
           icon={<PlusOutlined />}
-          size="large"
           onClick={() => setVisible(!visible)}
         />
       </div>
@@ -139,31 +179,77 @@ const Home = () => {
         setVisible={setVisible}
         users={users}
         onCreate={onCreate}
+        actualCompanyIs={company}
       />
     </div>
   );
 };
 
-const LoanList = ({ data, users, trailingActions, formatUser }) => (
+const LoanList = ({ data, users, trailingActions, formatUser, blockSwipe }) => (
   <List
-    grid={{ gutter: 16, column: 2 }}
+    grid={{ gutter: 16, column: isMobile ? 2 : 4 }}
     dataSource={data}
     renderItem={(item) => (
       <List.Item>
-        <SwipeableList>
-          <SwipeableListItem trailingActions={trailingActions(item)}>
-            <Card title={item.name}>
-              <Descriptions column={1}>
-                <Descriptions.Item label="Cantidad de préstamo">
-                  {item.quantity}
-                </Descriptions.Item>
+        <SwipeableList fullSwipe={true}>
+          <SwipeableListItem
+            key={item.id}
+            blockSwipe={blockSwipe}
+            trailingActions={trailingActions(item)}
+            type="ommer"
+          >
+            <Card
+              bordered={true}
+              hoverable={true}
+              actions={[
+                <span
+                  style={{
+                    color: "#1890ff",
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <p>{item.toCompany}</p>
+                </span>,
+                <span
+                  style={{
+                    color: "#1890ff",
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <p>Cantidad:({item.quantity})</p>
+                </span>,
+              ]}
+              title={
+                <span
+                  style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
+                >
+                  {item.name}
+                </span>
+              }
+            >
+              <Descriptions
+                size="small"
+                column={isMobile ? 2 : 3}
+                layout="vertical"
+                style={{ textAlign: "left" }}
+              >
                 <Descriptions.Item
-                  label={formatUser === formateUidToMail ? "para:" : "dueño/a"}
+                  label={formatUser === formateUidToMail ? "para" : "dueño/a"}
                 >
                   {formatUser(item, users)}
                 </Descriptions.Item>
+
                 <Descriptions.Item label="Fecha de préstamo">
                   {item.date}
+                </Descriptions.Item>
+                <Descriptions.Item
+                  label={
+                    formatUser === formateUidToMail ? "Anotado por" : "dueño/a"
+                  }
+                >
+                  {formateUidFromMail(item, users)}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
@@ -175,8 +261,10 @@ const LoanList = ({ data, users, trailingActions, formatUser }) => (
 );
 
 const formateUidToMail = (item, users) =>
-  users.find(({ uid }) => uid === item.to)?.email || "Email no encontrado";
+  users.find(({ uid }) => uid === item.to)?.displayName ||
+  "Email no encontrado";
 const formateUidFromMail = (item, users) =>
-  users.find(({ uid }) => uid === item.from)?.email || "Email no encontrado";
+  users.find(({ uid }) => uid === item.from)?.displayName ||
+  "Email no encontrado";
 
 export default Home;

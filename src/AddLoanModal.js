@@ -1,23 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Modal, Form, Input, DatePicker, InputNumber, Select } from "antd";
 import moment from "moment";
 import { auth } from "./firebase-config";
 
 const { Option } = Select;
 
-const AddLoanModal = ({ visible, onCreate, setVisible, users }) => {
+const AddLoanModal = ({
+  visible,
+  onCreate,
+  setVisible,
+  users,
+  actualCompanyIs,
+}) => {
   const [form] = Form.useForm();
+  const [toCompany, setToCompany] = useState("");
 
   const initialValues = {
     date: moment(),
     from: auth.currentUser?.uid,
+    fromCompany: actualCompanyIs,
     name: "",
     quantity: 1,
     to: "",
+    toCompany: "",
   };
 
   const filteredUsers = users.filter(
     ({ uid }) => uid !== auth?.currentUser?.uid
+  );
+  const filteredUsersByCompany = filteredUsers.filter(
+    ({ company }) => company !== actualCompanyIs
   );
 
   const handleOk = async () => {
@@ -46,6 +58,12 @@ const AddLoanModal = ({ visible, onCreate, setVisible, users }) => {
       onOk={handleOk}
     >
       <Form form={form} layout="vertical" initialValues={initialValues}>
+        <Form.Item name="fromCompany" label="FROM COMPANY" hidden>
+          <Input />
+        </Form.Item>
+        <Form.Item name="toCompany" label="TO COMPANY" hidden>
+          <Input />
+        </Form.Item>
         <Form.Item
           name="date"
           label="Fecha"
@@ -89,7 +107,7 @@ const AddLoanModal = ({ visible, onCreate, setVisible, users }) => {
             },
           ]}
         >
-          <InputNumber style={{ width: "100%" }} />
+          <InputNumber style={{ width: "100%" }} type="number" />
         </Form.Item>
 
         <Form.Item
@@ -99,10 +117,16 @@ const AddLoanModal = ({ visible, onCreate, setVisible, users }) => {
             { required: true, message: "Por favor selecciona el destinatario" },
           ]}
         >
-          <Select placeholder="Selecciona el destinatario">
-            {filteredUsers.map(({ email, uid }) => (
-              <Option key={uid} value={uid}>
-                {email}
+          <Select
+            placeholder="Selecciona el destinatario"
+            onChange={(_, args) => {
+              setToCompany(args?.toCompany);
+              form.setFieldsValue({ toCompany: args?.toCompany });
+            }}
+          >
+            {filteredUsersByCompany.map(({ uid, displayName, company }) => (
+              <Option key={uid} value={uid} toCompany={company}>
+                {displayName} - {company}
               </Option>
             ))}
           </Select>

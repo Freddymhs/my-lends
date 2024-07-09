@@ -1,13 +1,25 @@
 // src/Login.js
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { auth, database } from "./firebase-config"; // Asegúrate de que la ruta es correcta
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { ref, get, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
+import "./login.css";
+import { Button, Card } from "antd";
+import Title from "antd/es/typography/Title";
+import { GoogleOutlined } from "@ant-design/icons";
 
 const Login = () => {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user?.uid) {
+      navigate("/lends");
+    }
+  }, [user, navigate]);
 
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
@@ -20,20 +32,31 @@ const Login = () => {
 
         get(userRef)
           .then((snapshot) => {
+            const userPropsInRealtimeDB = snapshot.val();
             if (snapshot.exists()) {
               console.log("User already exists in database");
-              navigate("/lends");
+              setUser({
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                company: userPropsInRealtimeDB.company,
+              });
             } else {
               // Registrar el usuario en Firebase Realtime Database
               set(userRef, {
                 email: user.email,
                 displayName: user.displayName,
                 uid: user.uid,
-                // photoURL: user.photoURL,
+                company: "null",
               })
                 .then(() => {
                   console.log("User registered in database");
-                  navigate("/lends");
+                  setUser({
+                    uid: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    company: userPropsInRealtimeDB.company,
+                  });
                 })
                 .catch((error) => {
                   console.error("Error registering user in database:", error);
@@ -50,9 +73,18 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <button onClick={signInWithGoogle}>Sign in with Google</button>
+    <div className="login-container">
+      <Card className="login-card">
+        <Title level={1}>L E N D S</Title>
+        <Button
+          type="primary"
+          icon={<GoogleOutlined />}
+          onClick={signInWithGoogle}
+          size="large"
+        >
+          Iniciar sesión en Google
+        </Button>
+      </Card>
     </div>
   );
 };
