@@ -21,6 +21,7 @@ import LogoutDropdown from "./LogOutDropdown";
 import { Header } from "antd/es/layout/layout";
 import { UserContext } from "./UserContext";
 import DateRangeFilter from "./DateRangeFilter";
+import { Modal } from "antd";
 
 const { TabPane } = Tabs;
 
@@ -36,6 +37,21 @@ const Home = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
+
+  const openDeleteConfirmation = (item) => {
+    Modal.confirm({
+      title: "¿Estás seguro de que deseas eliminar este elemento?",
+      content: "Esta acción es irreversible.",
+      okText: "Eliminar",
+      cancelText: "Cancelar",
+      okType: "danger",
+      centered: true,
+      onOk() {
+        deleteItemFromDatabase(item);
+      },
+      onCancel() {},
+    });
+  };
 
   useEffect(() => {
     let unsubscribeLeads = () => {};
@@ -87,8 +103,8 @@ const Home = () => {
   const trailingActions = (item) => (
     <TrailingActions>
       <SwipeAction
-        destructive={true}
-        onClick={() => deleteItemFromDatabase(item)}
+        destructive={false}
+        onClick={() => openDeleteConfirmation(item)}
       >
         <div
           style={{
