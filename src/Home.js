@@ -21,7 +21,7 @@ import LogoutDropdown from "./LogOutDropdown";
 import { Header } from "antd/es/layout/layout";
 import { UserContext } from "./UserContext";
 import DateRangeFilter from "./DateRangeFilter";
-import { Modal } from "antd";
+import { Modal, Alert } from "antd";
 
 const { TabPane } = Tabs;
 
@@ -29,7 +29,7 @@ const Home = () => {
   const [users, setUsers] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { user, _ } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { company } = user || {};
   const { uid } = user || {};
   const [returnData, setReturnData] = useState([]);
@@ -78,7 +78,17 @@ const Home = () => {
         );
 
         unsubscribeUsers = getUsersInFirebase((data) => {
+          const userDataFromUserLogged = data.filter(
+            ({ uid }) => uid === user.uid
+          )[0];
+
+          // list users in database
           setUsers(data);
+          // context user in memory
+          setUser({
+            ...user,
+            ...userDataFromUserLogged,
+          });
         });
       } else {
         setLoading(false);
@@ -91,7 +101,7 @@ const Home = () => {
       unsubscribeLeads();
       unsubscribeUsers();
     };
-  }, [uid, startDate, endDate]);
+  }, [uid, startDate, endDate, company]);
   const handleFilter = (newStartDate, newEndDate) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -154,6 +164,16 @@ const Home = () => {
         dateRange={dateRange}
         setDateRange={setDateRange}
       />
+
+      {company === "null" && (
+        <Alert
+          message="Error, no perteneces a ninguna compañía"
+          description="Por favor, solicita a tu compañía para que te una a ella"
+          showIcon
+          type="error"
+        />
+      )}
+
       <Tabs centered defaultActiveKey="1">
         <TabPane tab="Prestamos" key="1">
           <LoanList
@@ -183,6 +203,7 @@ const Home = () => {
         }
       >
         <Button
+          disabled={company === "null"}
           className={isMobile ? "floating-button-mobile" : "floating-button"}
           type="primary"
           icon={<PlusOutlined />}

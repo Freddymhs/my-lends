@@ -125,7 +125,12 @@ const AddLoanModal = ({
             }}
           >
             {filteredUsersByCompany.map(({ uid, displayName, company }) => (
-              <Option key={uid} value={uid} toCompany={company}>
+              <Option
+                key={uid}
+                value={uid}
+                toCompany={company}
+                disabled={company === "null"}
+              >
                 {displayName} - {company}
               </Option>
             ))}
