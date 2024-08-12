@@ -88,9 +88,19 @@ const AddLoanModal = ({
             name="date"
             label="Fecha"
             hidden
-            rules={[{ required: true, message: "Por favor ingresa la fecha" }]}
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder="Selecciona fecha y hora"
+            rules={[
+              { required: true, message: "Por favor ingresa la fecha y hora" },
+            ]}
           >
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker
+              format="YYYY-MM-DD HH:mm:ss"
+              showTime={{
+                defaultValue: moment(),
+              }}
+            />
           </Form.Item>
 
           <Form.Item

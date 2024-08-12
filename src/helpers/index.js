@@ -12,4 +12,11 @@ const findFromUserName = (item, users) => {
   );
 };
 
-export { findToUserName, findFromUserName };
+const findReturnedByUserName = (item, users) => {
+  return (
+    users.find(({ uid }) => uid === item.returnedBy)?.displayName ||
+    "Email no encontrado"
+  );
+};
+
+export { findToUserName, findFromUserName, findReturnedByUserName };

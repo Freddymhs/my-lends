@@ -18,7 +18,7 @@ export const addNewItemToDatabase = async (newItem) => {
   const leadsRef = ref(database, LEADS_REF);
   const itemToAdd = {
     ...newItem,
-    date: newItem.date.format("DD-MM-YYYY"),
+    date: newItem.date.format("DD-MM-YYYY HH:mm:ss"),
   };
 
   try {
@@ -60,7 +60,7 @@ export const getDataFromFirebase = (callback, startDate, endDate) => {
       // Aplicar filtro de fechas si se proporcionan startDate y endDate
       if (startDate && endDate) {
         lends = lends.filter((item) => {
-          const itemDate = moment(item.date, "DD-MM-YYYY").toDate();
+          const itemDate = moment(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
           return itemDate >= startDate && itemDate <= endDate;
         });
       }
@@ -110,7 +110,7 @@ export const deleteItemFromDatabase = async ({ id }) => {
         position: "fixed",
         top: 10,
         right: 10,
-        zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+        zIndex: 1000,
         padding: "10px",
         borderRadius: 4,
         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
@@ -118,6 +118,44 @@ export const deleteItemFromDatabase = async ({ id }) => {
     });
   } catch (error) {
     handleDatabaseError("deleteItemFromDatabase")(error);
+  }
+};
+
+export const changeStateOfItemInDatabase = async (
+  item,
+  responsibleUid,
+  typeChange
+) => {
+  const { id, returned, ...itemUpdated } = item;
+  const leadRef = ref(database, `${LEADS_REF}/${id}`);
+
+  try {
+    switch (typeChange) {
+      case "returned":
+        itemUpdated.returned = !returned;
+        itemUpdated.returnedBy = returned === false ? responsibleUid : null;
+        break;
+      default:
+        break;
+    }
+
+    await set(leadRef, { ...itemUpdated });
+
+    message.success({
+      content: "Estado del item ha sido cambiado exitosamente.",
+      duration: 4,
+      style: {
+        position: "fixed",
+        top: 10,
+        right: 10,
+        zIndex: 1000,
+        padding: "10px",
+        borderRadius: 4,
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+      },
+    });
+  } catch (error) {
+    handleDatabaseError("changeStateOfItemInDatabase")(error);
   }
 };
 

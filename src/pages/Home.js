@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import IsLoadingScreen from "../components/IsLoadingScreen";
 import { Tabs, Button } from "antd";
 import { isMobile } from "react-device-detect";
-import { TrailingActions, SwipeAction } from "react-swipeable-list";
+import {
+  TrailingActions,
+  SwipeAction,
+  LeadingActions,
+} from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
 import { PlusOutlined } from "@ant-design/icons";
 import "../styles/FloatingButton.css";
@@ -11,6 +15,7 @@ import {
   getDataFromFirebase,
   getUsersInFirebase,
   deleteItemFromDatabase,
+  changeStateOfItemInDatabase,
 } from "../helpers";
 import AddLoanModal from "../components/Home/AddLoanModal";
 import { UserContext } from "../UserContext";
@@ -48,6 +53,24 @@ const Home = () => {
         deleteItemFromDatabase(item);
       },
       onCancel() {},
+    });
+  };
+
+  const openChangeStateConfirmation = (item, uid) => {
+    Modal.confirm({
+      title: "Confirmar cambio de estado",
+      content: "Este cambio lo marcará  como regresado",
+      okText: "Confirmar",
+      cancelText: "Cancelar",
+      okType: "primary",
+      centered: true,
+      onOk() {
+        console.log("El estado del item ha sido cambiado por", uid);
+        changeStateOfItemInDatabase(item, uid, "returned");
+      },
+      onCancel() {
+        console.log("Operación cancelada.");
+      },
     });
   };
 
@@ -115,7 +138,7 @@ const Home = () => {
           style={{
             backgroundColor: "red",
             color: "white",
-            padding: 10,
+            // padding: 10,
             fontSize: 18,
           }}
         >
@@ -123,6 +146,25 @@ const Home = () => {
         </div>
       </SwipeAction>
     </TrailingActions>
+  );
+  const leadingActions = (item) => (
+    <LeadingActions>
+      <SwipeAction
+        destructive={false}
+        onClick={() => openChangeStateConfirmation(item, uid)}
+      >
+        <div
+          style={{
+            backgroundColor: "#ff7043",
+            color: "white",
+            // padding: 10,
+            fontSize: 18,
+          }}
+        >
+          Marcar como regresado
+        </div>
+      </SwipeAction>
+    </LeadingActions>
   );
 
   return (
@@ -144,8 +186,9 @@ const Home = () => {
             data={returnData}
             allUsersInFirebase={users}
             trailingActions={trailingActions}
+            leadingActions={leadingActions}
             formatUser={findToUserName}
-            blockSwipe={false}
+            showLeadingActions={false}
           />
         </TabPane>
         <TabPane tab="Deudas" key="2">
@@ -153,8 +196,9 @@ const Home = () => {
             data={belongsData}
             allUsersInFirebase={users}
             trailingActions={trailingActions}
+            leadingActions={leadingActions}
             formatUser={findFromUserName}
-            blockSwipe={true}
+            showTrailingActions={false}
           />
         </TabPane>
       </Tabs>
