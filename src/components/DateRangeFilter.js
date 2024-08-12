@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { DatePicker, Button } from "antd";
+import { isMobile } from "react-device-detect";
 // import moment from "moment";
 
 const { RangePicker } = DatePicker;
@@ -7,7 +8,6 @@ const { RangePicker } = DatePicker;
 const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
   const handleFilter = () => {
     if (dateRange[0] && dateRange[1]) {
-      // console.log(" dateRange", dateRange);
       const start = dateRange[0].startOf("day").toDate();
       const end = dateRange[1].endOf("day").toDate();
       onFilter(start, end);
@@ -25,28 +25,29 @@ const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
     <div
       style={{
         display: "flex",
-        justifyContent: "space-around",
-        marginBottom: 16,
+        flexDirection: isMobile ? "column" : "row",
+        gap: 8,
       }}
     >
       <RangePicker
         value={dateRange}
         onChange={setDateRange}
-        style={{ marginLeft: 8, flex: 3 }}
+        style={{ width: "100%" }}
       />
-      <Button
-        onClick={handleFilter}
-        type="primary"
-        style={{ marginLeft: 8, flex: 1 }}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
       >
-        Filtrar por fecha
-      </Button>
-      <Button
-        onClick={handleClear}
-        style={{ marginLeft: 8, marginRight: 8, flex: 1 }}
-      >
-        Quitar filtro
-      </Button>
+        <Button type="primary" onClick={handleFilter} style={{ flex: 1 }}>
+          Filtrar por fecha
+        </Button>
+        <Button onClick={handleClear} style={{ flex: 1 }}>
+          Quitar filtro
+        </Button>
+      </div>
     </div>
   );
 };

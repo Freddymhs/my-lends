@@ -2,9 +2,9 @@ import { Dropdown, Button, Menu } from "antd";
 import { signOut } from "firebase/auth";
 import { useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
-import { auth } from "./firebase-config";
+import { auth } from "../../firebase-config";
 import { LogoutOutlined } from "@ant-design/icons";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../../UserContext";
 
 const menuItems = [
   {

@@ -1,11 +1,11 @@
 // src/Login.js
 import React, { useContext, useEffect } from "react";
-import { auth, database } from "./firebase-config"; // Asegúrate de que la ruta es correcta
+import { auth, database } from "../firebase-config"; // Asegúrate de que la ruta es correcta
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { ref, get, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext";
-import "./login.css";
+import { UserContext } from "../UserContext";
+import "../styles/login.css";
 import { Button, Card } from "antd";
 import Title from "antd/es/typography/Title";
 import { GoogleOutlined } from "@ant-design/icons";
