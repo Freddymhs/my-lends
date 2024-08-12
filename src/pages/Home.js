@@ -16,7 +16,7 @@ import AddLoanModal from "../components/Home/AddLoanModal";
 import { UserContext } from "../UserContext";
 import DateRangeFilter from "../components/DateRangeFilter";
 import { Modal, Alert } from "antd";
-import { formateUidToMail, formateUidFromMail } from "../helpers/index";
+import { findToUserName, findFromUserName } from "../helpers/index";
 import LendsList from "../components/Home/LendsList";
 import HeaderApp from "../components/Home/HeaderApp";
 import NoCompanyAlert from "../components/Home/NoCompanyAlert";
@@ -142,18 +142,18 @@ const Home = () => {
         <TabPane tab="Prestamos" key="1">
           <LendsList
             data={returnData}
-            users={users}
+            allUsersInFirebase={users}
             trailingActions={trailingActions}
-            formatUser={formateUidToMail}
+            formatUser={findToUserName}
             blockSwipe={false}
           />
         </TabPane>
         <TabPane tab="Deudas" key="2">
           <LendsList
             data={belongsData}
-            users={users}
+            allUsersInFirebase={users}
             trailingActions={trailingActions}
-            formatUser={formateUidFromMail}
+            formatUser={findFromUserName}
             blockSwipe={true}
           />
         </TabPane>

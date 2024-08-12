@@ -32,7 +32,7 @@ const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
       <RangePicker
         value={dateRange}
         onChange={setDateRange}
-        style={{ width: "100%" }}
+        style={{ width: "100%", maxWidth: "800px" }}
       />
       <div
         style={{

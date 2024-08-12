@@ -1,12 +1,12 @@
 import React from "react";
 import { List, Card, Descriptions } from "antd";
 import { isMobile } from "react-device-detect";
-import { formateUidToMail, formateUidFromMail } from "../../helpers/index";
+import { findToUserName, findFromUserName } from "../../helpers/index";
 import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
 
 const LendsList = ({
   data,
-  users,
+  allUsersInFirebase,
   trailingActions,
   formatUser,
   blockSwipe,
@@ -34,7 +34,7 @@ const LendsList = ({
                     justifyContent: "center",
                   }}
                 >
-                  <p>{item.toCompany}</p>
+                  <span>{item.toCompany}</span>
                 </span>,
                 <span
                   style={{
@@ -43,7 +43,7 @@ const LendsList = ({
                     justifyContent: "center",
                   }}
                 >
-                  <p>Cantidad: {item.quantity}</p>
+                  <span>Cantidad: {item.quantity}</span>
                 </span>,
               ]}
               title={
@@ -61,20 +61,21 @@ const LendsList = ({
                 style={{ textAlign: "left" }}
               >
                 <Descriptions.Item
-                  label={formatUser === formateUidToMail ? "para" : "dueño/a"}
+                  // label={formatUser === findToUserName ? "recibe" : "recibio"}
+                  label="recibe"
                 >
-                  {formatUser(item, users)}
+                  {findToUserName(item, allUsersInFirebase)}
                 </Descriptions.Item>
 
                 <Descriptions.Item label="Fecha de préstamo">
                   {item.date}
                 </Descriptions.Item>
+
                 <Descriptions.Item
-                  label={
-                    formatUser === formateUidToMail ? "Anotado por" : "dueño/a"
-                  }
+                  // label={formatUser === findFromUserName ? "solicito" : "anota"}
+                  label="anota"
                 >
-                  {formateUidFromMail(item, users)}
+                  {findFromUserName(item, allUsersInFirebase)}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
