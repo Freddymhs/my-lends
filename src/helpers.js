@@ -136,7 +136,8 @@ export const changeStateOfItemInDatabase = async (
     switch (typeChange) {
       case "returned":
         itemUpdated.returned = !returned;
-        itemUpdated.returnedBy = returned === false ? responsibleUid : null;
+        itemUpdated.returnedBy =
+          (!returned === true && responsibleUid) || "null";
         break;
       default:
         break;
