@@ -1,4 +1,4 @@
-import { onValue, push, ref, remove, set } from "firebase/database";
+import { onValue, push, ref, remove, set, query } from "firebase/database";
 import moment from "moment";
 import { database } from "./firebase-config";
 import { message } from "antd";
@@ -42,7 +42,7 @@ export const addNewItemToDatabase = async (newItem) => {
 };
 
 export const getDataFromFirebase = (callback, startDate, endDate) => {
-  const leadsRef = ref(database, LEADS_REF);
+  const leadsQuery = query(ref(database, LEADS_REF));
 
   if (typeof callback !== "function") {
     console.error("getDataFromFirebase: callback debe ser una función");
@@ -50,7 +50,7 @@ export const getDataFromFirebase = (callback, startDate, endDate) => {
   }
 
   const unsubscribe = onValue(
-    leadsRef,
+    leadsQuery,
     (snapshot) => {
       const data = snapshot.val();
       let lends = data
@@ -64,6 +64,9 @@ export const getDataFromFirebase = (callback, startDate, endDate) => {
           return itemDate >= startDate && itemDate <= endDate;
         });
       }
+
+      //  order by date descending
+      lends.sort((a, b) => b.date.localeCompare(a.date));
 
       callback(lends);
     },
