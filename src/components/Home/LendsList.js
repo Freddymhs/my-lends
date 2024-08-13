@@ -9,6 +9,8 @@ import {
 import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
 import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import "moment/locale/es";
+moment.locale("es");
 
 const LendsList = ({
   data,
@@ -159,11 +161,14 @@ const LendsList = ({
                         },
                         {
                           label: "Fecha de préstamo:",
-                          value: moment(item.date).format("DD/MM"),
+                          value: moment(item.date, "DD-MM").format("DD/MMMM"),
                         },
                         {
                           label: "Hora de préstamo:",
-                          value: moment(item.date).format("HH:mm"),
+                          value: moment(
+                            item.date,
+                            "DD-MM-YYYY HH:mm:ss"
+                          ).format("HH:mm"),
                         },
                       ].map((entry, index) => (
                         <div
