@@ -126,18 +126,31 @@ export const deleteItemFromDatabase = async ({ id }) => {
 
 export const changeStateOfItemInDatabase = async (
   item,
-  responsibleUid,
+  { uid: responsibleUid, displayName, comment },
   typeChange
 ) => {
   const { id, returned, ...itemUpdated } = item;
   const leadRef = ref(database, `${LEADS_REF}/${id}`);
+  const newParrafo = `(${moment().format("HH:mm")})${displayName}: ${
+    comment.trim() || "✉️"
+  }`;
+
+  const validateNewParrafo = (comment) => {
+    if (comment.length > 100) {
+      return comment.substring(0, 100);
+    }
+
+    return comment;
+  };
 
   try {
     switch (typeChange) {
       case "returned":
         itemUpdated.returned = !returned;
-        itemUpdated.returnedBy =
-          (!returned === true && responsibleUid) || "null";
+        itemUpdated.returnedBy = responsibleUid || null;
+        itemUpdated.comment = `${item.comment} \n ${validateNewParrafo(
+          newParrafo
+        )}`;
         break;
       default:
         break;

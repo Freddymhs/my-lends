@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import IsLoadingScreen from "../components/IsLoadingScreen";
-import { Tabs, Button } from "antd";
+import { Tabs, Input } from "antd";
 import { isMobile } from "react-device-detect";
+import { message } from "antd";
 import {
   TrailingActions,
   SwipeAction,
@@ -35,6 +36,7 @@ const Home = () => {
   const { user, setUser } = useContext(UserContext);
   const { company } = user || {};
   const { uid } = user || {};
+  const { displayName } = user || {};
   const [returnData, setReturnData] = useState([]);
   const [belongsData, setBelongsData] = useState([]);
   const [startDate, setStartDate] = useState(null);
@@ -57,16 +59,53 @@ const Home = () => {
   };
 
   const openChangeStateConfirmation = (item, uid) => {
+    let comment = "";
     Modal.confirm({
       title: "Confirmar cambio de estado",
-      content: "Este cambio lo marcará  como regresado",
+      content: (
+        <>
+          {!item.returned &&
+            `Este cambio lo marcará como regresado por ${displayName} y puedes agregar un comentario`}
+          {item.returned &&
+            `Este cambio lo desmarcará como regresado por ${displayName} y puedes agregar un comentario`}
+          <p
+            style={{
+              color: "#ff7043",
+              fontSize: "18px",
+            }}
+          >
+            Historial de cambios:
+          </p>
+          {item.comment.split("\n").map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+          <Input.TextArea
+            maxLength={100}
+            placeholder="Añadir un comentario (opcional)"
+            onChange={(e) => {
+              if (e.target.value.length >= 100) {
+                message.error(
+                  "El comentario no puede superar los 100 caracteres"
+                );
+                return;
+              }
+              comment = e.target.value;
+            }}
+            rows={3}
+          />
+        </>
+      ),
       okText: "Confirmar",
       cancelText: "Cancelar",
       okType: "primary",
       centered: true,
       onOk() {
         console.log("El estado del item ha sido cambiado por", uid);
-        changeStateOfItemInDatabase(item, uid, "returned");
+        changeStateOfItemInDatabase(
+          item,
+          { uid, displayName, comment },
+          "returned"
+        );
       },
       onCancel() {
         console.log("Operación cancelada.");
@@ -166,7 +205,6 @@ const Home = () => {
       </SwipeAction>
     </LeadingActions>
   );
-
   return (
     <>
       <IsLoadingScreen loading={loading} />

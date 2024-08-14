@@ -88,13 +88,13 @@ const LendsList = ({
                       <div>
                         <span
                           style={{
-                            color: "#ff7043",
+                            color: item.returned ? "#ff7043" : "#1890ff",
                             display: "flex",
                             justifyContent: "start",
                           }}
                         >
                           {openKey.includes(id) &&
-                            item.returned &&
+                            !!item.returnedBy &&
                             findReturnedByUserName(item, allUsersInFirebase)}
                         </span>
                         <div
@@ -183,6 +183,43 @@ const LendsList = ({
                           <strong>{entry.label}</strong> {entry.value}
                         </div>
                       ))}
+                    </div>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: isMobile
+                          ? "1fr"
+                          : "repeat(1, 1fr)",
+                        gap: "8px",
+                      }}
+                    >
+                      {item?.comment &&
+                        [
+                          {
+                            label: "Historial de cambios:",
+                            value: item?.comment,
+                          },
+                        ].map((entry, index) => (
+                          <div
+                            key={index}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "4px",
+                            }}
+                          >
+                            <strong>{entry.label}</strong>
+                            <div
+                              style={{
+                                wordBreak: "break-word",
+                                lineHeight: "1.2",
+                                textAlign: "left",
+                              }}
+                            >
+                              {entry.value}
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   </Panel>
                 </Collapse>
