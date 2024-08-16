@@ -136,21 +136,19 @@ export const changeStateOfItemInDatabase = async (
   }`;
 
   const validateNewParrafo = (comment) => {
-    if (comment.length > 100) {
-      return comment.substring(0, 100);
-    }
+    if (comment.length > 100) return comment.substring(0, 100);
 
     return comment;
   };
+
+  const updatedComment = `${item.comment} \n ${validateNewParrafo(newParrafo)}`;
 
   try {
     switch (typeChange) {
       case "returned":
         itemUpdated.returned = !returned;
         itemUpdated.returnedBy = responsibleUid || null;
-        itemUpdated.comment = `${item.comment} \n ${validateNewParrafo(
-          newParrafo
-        )}`;
+        itemUpdated.comment = updatedComment;
         break;
       default:
         break;

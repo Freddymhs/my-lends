@@ -33,7 +33,7 @@ const LendsList = ({
 
   return (
     <List
-      grid={{ gutter: 16, column: isMobile ? 2 : 4 }}
+      grid={{ gutter: 16, column: isMobile ? 1 : 4 }}
       dataSource={data}
       renderItem={(item) => {
         const { id } = item;
@@ -184,42 +184,22 @@ const LendsList = ({
                         </div>
                       ))}
                     </div>
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: isMobile
-                          ? "1fr"
-                          : "repeat(1, 1fr)",
-                        gap: "8px",
-                      }}
-                    >
-                      {item?.comment &&
-                        [
-                          {
-                            label: "Historial de cambios:",
-                            value: item?.comment,
-                          },
-                        ].map((entry, index) => (
-                          <div
-                            key={index}
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "4px",
-                            }}
-                          >
-                            <strong>{entry.label}</strong>
-                            <div
-                              style={{
-                                wordBreak: "break-word",
-                                lineHeight: "1.2",
-                                textAlign: "left",
-                              }}
-                            >
-                              {entry.value}
-                            </div>
-                          </div>
-                        ))}
+                    <div>
+                      <strong> Historial de cambios: </strong>
+                      {item.comment?.split("\n").map((line, index) => (
+                        <p
+                          style={{
+                            margin: "0px",
+                            marginBottom: "7px",
+                            wordBreak: "break-word",
+                            lineHeight: "1.2",
+                            textAlign: "left",
+                          }}
+                          key={index}
+                        >
+                          {line}
+                        </p>
+                      ))}
                     </div>
                   </Panel>
                 </Collapse>

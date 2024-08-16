@@ -77,7 +77,18 @@ const Home = () => {
             Historial de cambios:
           </p>
           {item.comment?.split("\n").map((line, index) => (
-            <p key={index}>{line}</p>
+            <p
+              style={{
+                margin: "0px",
+                marginBottom: "7px",
+                wordBreak: "break-word",
+                lineHeight: "1.2",
+                textAlign: "left",
+              }}
+              key={index}
+            >
+              {line}
+            </p>
           ))}
           <Input.TextArea
             maxLength={100}
