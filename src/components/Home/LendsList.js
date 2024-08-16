@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { List, Collapse, Divider } from "antd";
 import { isMobile } from "react-device-detect";
+import { UserContext } from "../../UserContext";
 import {
   findToUserName,
   findFromUserName,
@@ -22,7 +23,9 @@ const LendsList = ({
   showTrailingActions,
 }) => {
   const { Panel } = Collapse;
+  const { user } = useContext(UserContext);
   const [openKey, setOpenKey] = useState([]);
+  const { numberOfColumns } = user || {};
 
   const handleCollapseChange = (key) => {
     const isOpen = openKey.includes(key);
@@ -33,7 +36,7 @@ const LendsList = ({
 
   return (
     <List
-      grid={{ gutter: 16, column: isMobile ? 1 : 4 }}
+      grid={{ gutter: 16, column: isMobile ? numberOfColumns : 4 }}
       dataSource={data}
       renderItem={(item) => {
         const { id } = item;

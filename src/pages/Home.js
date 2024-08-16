@@ -216,9 +216,11 @@ const Home = () => {
       </SwipeAction>
     </LeadingActions>
   );
+  if (loading) {
+    return <IsLoadingScreen loading={loading} />;
+  }
   return (
     <>
-      <IsLoadingScreen loading={loading} />
       <HeaderApp />
       {/*  */}
       <DateRangeFilter

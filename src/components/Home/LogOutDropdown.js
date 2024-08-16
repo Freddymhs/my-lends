@@ -42,9 +42,7 @@ const LogoutDropdown = () => {
       overlay={<Menu items={menuItems} onClick={handleMenuClick} />}
       trigger={["click"]}
     >
-      <Button type="primary">
-        <LogoutOutlined />
-      </Button>
+      <Button size="large" type="primary" icon={<LogoutOutlined />} />
     </Dropdown>
   );
 };

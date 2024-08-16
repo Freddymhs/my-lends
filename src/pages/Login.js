@@ -39,7 +39,8 @@ const Login = () => {
                 uid: user.uid,
                 email: user.email,
                 displayName: user.displayName,
-                company: userPropsInRealtimeDB.company,
+                company: userPropsInRealtimeDB?.company,
+                numberOfColumns: userPropsInRealtimeDB?.numberOfColumns,
               });
             } else {
               // Registrar el usuario en Firebase Realtime Database
@@ -48,6 +49,7 @@ const Login = () => {
                 displayName: user.displayName,
                 uid: user.uid,
                 company: "null",
+                numberOfColumns: 2,
               })
                 .then(() => {
                   console.log("User registered in database");
@@ -55,7 +57,8 @@ const Login = () => {
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
-                    company: userPropsInRealtimeDB.company,
+                    company: userPropsInRealtimeDB?.company,
+                    numberOfColumns: userPropsInRealtimeDB?.numberOfColumns,
                   });
                 })
                 .catch((error) => {

@@ -1,4 +1,12 @@
-import { onValue, push, ref, remove, set, query } from "firebase/database";
+import {
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+  query,
+  update,
+} from "firebase/database";
 import moment from "moment";
 import { database } from "./firebase-config";
 import { message } from "antd";
@@ -174,6 +182,21 @@ export const changeStateOfItemInDatabase = async (
   }
 };
 
+export const changeNumberOfColumnsInDatabase = async (
+  numberOfColumns,
+  user
+) => {
+  const { uid } = user || {};
+  const userRef = ref(database, `${USERS_REF}/${uid}`);
+
+  try {
+    await update(userRef, {
+      numberOfColumns: numberOfColumns === 2 ? 1 : 2,
+    });
+  } catch (error) {
+    handleDatabaseError("changeNumberOfColumnsInDatabase")(error);
+  }
+};
 //
 // import { onValue, push, ref, remove, set } from "firebase/database";
 // import { database } from "./firebase-config";

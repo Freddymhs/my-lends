@@ -1,6 +1,6 @@
 import { Alert } from "antd";
 
-const NoCompanyAlert = (company) => {
+const NoCompanyAlert = ({ company }) => {
   return (
     company === "null" && (
       <Alert
