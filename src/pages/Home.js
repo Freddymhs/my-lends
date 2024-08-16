@@ -76,7 +76,7 @@ const Home = () => {
           >
             Historial de cambios:
           </p>
-          {item.comment.split("\n").map((line, index) => (
+          {item.comment?.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}
           <Input.TextArea
