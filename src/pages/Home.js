@@ -21,6 +21,7 @@ import {
 import AddLoanModal from "../components/Home/AddLoanModal";
 import { UserContext } from "../UserContext";
 import DateRangeFilter from "../components/DateRangeFilter";
+import Filters from "../Filters";
 import { Modal, Alert } from "antd";
 import { findToUserName, findFromUserName } from "../helpers/index";
 import LendsList from "../components/Home/LendsList";
@@ -42,6 +43,12 @@ const Home = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
+  const [filterType, setFilterType] = useState({
+    notReturned: true,
+    returned: true,
+    wasReturned: true,
+    deleted: false,
+  });
 
   const openDeleteConfirmation = (item) => {
     Modal.confirm({
@@ -52,7 +59,12 @@ const Home = () => {
       okType: "danger",
       centered: true,
       onOk() {
-        deleteItemFromDatabase(item);
+        // deleteItemFromDatabase(item);
+        changeStateOfItemInDatabase(
+          item,
+          { uid, displayName, comment: "deleted" },
+          "deleted"
+        );
       },
       onCancel() {},
     });
@@ -145,7 +157,8 @@ const Home = () => {
             setLoading(false);
           },
           startDate,
-          endDate
+          endDate,
+          filterType
         );
 
         unsubscribeUsers = getUsersInFirebase((data) => {
@@ -172,7 +185,7 @@ const Home = () => {
       unsubscribeLeads();
       unsubscribeUsers();
     };
-  }, [uid, startDate, endDate, company]);
+  }, [uid, startDate, endDate, company, filterType]);
   const handleFilter = (newStartDate, newEndDate) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -223,11 +236,30 @@ const Home = () => {
     <>
       <HeaderApp />
       {/*  */}
-      <DateRangeFilter
-        onFilter={handleFilter}
-        dateRange={dateRange}
-        setDateRange={setDateRange}
-      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          gap: 8,
+        }}
+      >
+        {" "}
+        <Filters setFilterType={setFilterType} filterType={filterType} />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          gap: 8,
+        }}
+      >
+        <DateRangeFilter
+          onFilter={handleFilter}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+        />
+      </div>
+
       {/*  */}
       <NoCompanyAlert company={company} />
       {/*  */}

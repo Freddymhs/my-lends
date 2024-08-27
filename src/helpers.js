@@ -49,7 +49,12 @@ export const addNewItemToDatabase = async (newItem) => {
   }
 };
 
-export const getDataFromFirebase = (callback, startDate, endDate) => {
+export const getDataFromFirebase = (
+  callback,
+  startDate,
+  endDate,
+  filterType
+) => {
   const leadsQuery = query(ref(database, LEADS_REF));
 
   if (typeof callback !== "function") {
@@ -70,6 +75,39 @@ export const getDataFromFirebase = (callback, startDate, endDate) => {
         lends = lends.filter((item) => {
           const itemDate = moment(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
           return itemDate >= startDate && itemDate <= endDate;
+        });
+      }
+
+      if (
+        filterType.notReturned ||
+        filterType.returned ||
+        filterType.deleted ||
+        filterType.wasReturned
+      ) {
+        const selectedNotReturned = filterType.notReturned;
+        const selectedReturned = filterType.returned;
+        const selectedDeleted = filterType.deleted;
+        const selectedWasReturned = filterType.wasReturned;
+
+        lends = lends.filter((item) => {
+          const hasNotReturned =
+            "returnedBy" in item && item.returned === false;
+          const hasReturned = "returnedBy" in item && item.returned === true;
+          const hasWasReturned =
+            "returnedBy" in item && item.returned === false;
+          const hasDeleted =
+            "deleted" in item && item.deleted === true && item.deletedBy;
+
+          return (
+            (selectedNotReturned &&
+              !hasNotReturned &&
+              !hasReturned &&
+              !hasWasReturned &&
+              !hasDeleted) ||
+            (selectedReturned && !hasDeleted && hasReturned) ||
+            (selectedWasReturned && !hasDeleted && hasWasReturned) ||
+            (selectedDeleted && hasDeleted)
+          );
         });
       }
 
@@ -109,11 +147,14 @@ export const uploadDataToFirebase = async (data) => {
   }
 };
 
-export const deleteItemFromDatabase = async ({ id }) => {
+export const deleteItemFromDatabase = async (item) => {
+  const { id, returned, ...itemUpdated } = item;
   const leadRef = ref(database, `${LEADS_REF}/${id}`);
 
   try {
-    await remove(leadRef);
+    itemUpdated.deleted = true; // await remove(leadRef);
+
+    await set(leadRef, { ...itemUpdated });
     message.success({
       content: "El item ha sido borrado exitosamente.",
       duration: 4,
@@ -156,6 +197,11 @@ export const changeStateOfItemInDatabase = async (
       case "returned":
         itemUpdated.returned = !returned;
         itemUpdated.returnedBy = responsibleUid || null;
+        itemUpdated.comment = updatedComment;
+        break;
+      case "deleted":
+        itemUpdated.deleted = true;
+        itemUpdated.deletedBy = responsibleUid || null;
         itemUpdated.comment = updatedComment;
         break;
       default:

@@ -6,6 +6,7 @@ import {
   findToUserName,
   findFromUserName,
   findReturnedByUserName,
+  findDeletedByUserName,
 } from "../../helpers/index";
 import { SwipeableList, SwipeableListItem } from "react-swipeable-list";
 import { CheckCircleFilled, CheckCircleOutlined } from "@ant-design/icons";
@@ -34,6 +35,56 @@ const LendsList = ({
     !isOpen && setOpenKey([...openKey, key]);
   };
 
+  const ItemStatus = (item) => {
+    const isDeleted = !!item?.deleted;
+
+    if (isDeleted) {
+      return (
+        <CheckCircleFilled
+          style={{
+            color: "red",
+            fontSize: "15px",
+            display: "block",
+          }}
+        />
+      );
+    }
+
+    if (item.returnedBy !== null) {
+      if (item.returned === true) {
+        return (
+          <CheckCircleFilled
+            style={{
+              color: "#ff7043",
+              fontSize: "15px",
+              display: "block",
+            }}
+          />
+        );
+      }
+      if (item.returned === false) {
+        return (
+          <CheckCircleOutlined
+            style={{
+              color: "#ff7043",
+              fontSize: "15px",
+              display: "block",
+            }}
+          />
+        );
+      }
+    }
+
+    return (
+      <CheckCircleOutlined
+        style={{
+          color: "#d9d9d9", // Color gris para no regresados
+          fontSize: "13px",
+          display: "block",
+        }}
+      />
+    );
+  };
   return (
     <List
       grid={{ gutter: 16, column: isMobile ? numberOfColumns : 4 }}
@@ -57,33 +108,7 @@ const LendsList = ({
                     margin: "0 !important",
                     padding: "0 !important",
                   }}
-                  expandIcon={() => {
-                    return (
-                      <>
-                        {!!item?.returned ? (
-                          <CheckCircleFilled
-                            style={{
-                              color: "#ff7043",
-                              fontSize: "15px",
-                              margin: "0 !important",
-                              padding: "0 !important",
-                              display: "block",
-                            }}
-                          />
-                        ) : (
-                          <CheckCircleOutlined
-                            style={{
-                              color: "#d9d9d9",
-                              fontSize: "13px",
-                              margin: "0 !important",
-                              padding: "0 !important",
-                              display: "block",
-                            }}
-                          />
-                        )}
-                      </>
-                    );
-                  }}
+                  expandIcon={() => ItemStatus(item)}
                 >
                   <Panel
                     key={id}
@@ -107,6 +132,16 @@ const LendsList = ({
                           }}
                         >
                           <span>{item.name}</span>
+                          <span
+                            style={{
+                              color: "red",
+                              display: "flex",
+                              justifyContent: "start",
+                            }}
+                          >
+                            {item.deletedBy &&
+                              findDeletedByUserName(item, allUsersInFirebase)}
+                          </span>
                         </div>
                         <Divider
                           style={{

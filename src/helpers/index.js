@@ -19,4 +19,16 @@ const findReturnedByUserName = (item, users) => {
   );
 };
 
-export { findToUserName, findFromUserName, findReturnedByUserName };
+const findDeletedByUserName = (item, users) => {
+  return (
+    users.find(({ uid }) => uid === item.deletedBy)?.displayName ||
+    "Email no encontrado"
+  );
+};
+
+export {
+  findToUserName,
+  findFromUserName,
+  findReturnedByUserName,
+  findDeletedByUserName,
+};

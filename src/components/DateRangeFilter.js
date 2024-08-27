@@ -22,13 +22,7 @@ const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: isMobile ? "column" : "row",
-        gap: 8,
-      }}
-    >
+    <>
       <RangePicker
         value={dateRange}
         onChange={setDateRange}
@@ -48,7 +42,7 @@ const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
           Quitar filtro
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 
