@@ -112,7 +112,8 @@ export const getDataFromFirebase = (
       }
 
       //  order by date descending
-      lends.sort((a, b) => b.date.localeCompare(a.date));
+      // lends.sort((a, b) => b.date.localeCompare(a.date));
+      lends.reverse();
 
       callback(lends);
     },
