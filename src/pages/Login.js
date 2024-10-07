@@ -6,7 +6,7 @@ import { ref, get, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import "../styles/login.css";
-import { Button, Card } from "antd";
+import { Button, Card, message } from "antd";
 import Title from "antd/es/typography/Title";
 import { GoogleOutlined } from "@ant-design/icons";
 
@@ -52,7 +52,6 @@ const Login = () => {
                 numberOfColumns: 2,
               })
                 .then(() => {
-                  console.log("User registered in database");
                   setUser({
                     uid: user.uid,
                     email: user.email,
@@ -62,16 +61,52 @@ const Login = () => {
                   });
                 })
                 .catch((error) => {
-                  console.error("Error registering user in database:", error);
+                  message.error({
+                    content: "Error registrando usuario en database",
+                    duration: 4,
+                    style: {
+                      position: "fixed",
+                      top: 10,
+                      right: 10,
+                      zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+                      padding: "10px",
+                      borderRadius: 4,
+                      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                    },
+                  });
                 });
             }
           })
           .catch((error) => {
-            console.error("Error checking user in database:", error);
+            message.error({
+              content: `Error buscando usuario en database: ${error.message}`,
+              duration: 4,
+              style: {
+                position: "fixed",
+                top: 10,
+                right: 10,
+                zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+                padding: "10px",
+                borderRadius: 4,
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+              },
+            });
           });
       })
       .catch((error) => {
-        console.error("Error signing in:", error);
+        message.error({
+          content: "Error en el inicio de sesión",
+          duration: 4,
+          style: {
+            position: "fixed",
+            top: 10,
+            right: 10,
+            zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+            padding: "10px",
+            borderRadius: 4,
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+          },
+        });
       });
   };
 

@@ -10,7 +10,6 @@ import { isMobile } from "react-device-detect";
 const HeaderApp = () => {
   const { user } = useContext(UserContext);
   const { numberOfColumns } = user || {};
-  console.log({ user });
   return (
     <>
       <Header style={{ background: "#fff", padding: 0 }}>

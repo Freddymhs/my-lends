@@ -51,6 +51,7 @@ export const addNewItemToDatabase = async (newItem) => {
 
 export const getDataFromFirebase = (
   callback,
+  onError,
   startDate,
   endDate,
   filterType
@@ -118,14 +119,14 @@ export const getDataFromFirebase = (
       callback(lends);
     },
     (error) => {
-      console.error("Error al obtener datos de Firebase:", error);
+      onError(error);
     }
   );
 
   return unsubscribe;
 };
 
-export const getUsersInFirebase = (callback) => {
+export const getUsersInFirebase = (callback, onError) => {
   const usersRef = ref(database, USERS_REF);
 
   return onValue(
@@ -134,7 +135,9 @@ export const getUsersInFirebase = (callback) => {
       const users = convertToArray(snapshot.val());
       callback(users);
     },
-    handleDatabaseError("getUsersInFirebase")
+    (error) => {
+      onError(error);
+    }
   );
 };
 
@@ -191,7 +194,9 @@ export const changeStateOfItemInDatabase = async (
     return comment;
   };
 
-  const updatedComment = `${item.comment} \n ${validateNewParrafo(newParrafo)}`;
+  const updatedComment = `${
+    item.comment ? item.comment : ""
+  } \n ${validateNewParrafo(newParrafo)}`;
 
   try {
     switch (typeChange) {

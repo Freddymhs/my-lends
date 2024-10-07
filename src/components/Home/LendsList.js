@@ -223,7 +223,7 @@ const LendsList = ({
                       ))}
                     </div>
                     <div>
-                      <strong> Historial de cambios: </strong>
+                      {item.comment && <strong> Historial de cambios: </strong>}
                       {item.comment?.split("\n").map((line, index) => (
                         <p
                           style={{

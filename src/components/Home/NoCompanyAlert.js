@@ -1,12 +1,13 @@
 import { Alert } from "antd";
 
 const NoCompanyAlert = ({ company }) => {
+  const noCompany = !company || company === "null" || company === "";
   return (
-    company === "null" && (
+    noCompany && (
       <Alert
         message="Error, no perteneces a ninguna compañía"
         description="Por favor, solicita a tu compañía para que te una a ella"
-        showIcon
+        showIcon={false}
         type="error"
       />
     )

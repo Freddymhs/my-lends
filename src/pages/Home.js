@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import IsLoadingScreen from "../components/IsLoadingScreen";
 import { Tabs, Input } from "antd";
 import { isMobile } from "react-device-detect";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase-config";
 import { message } from "antd";
 import {
   TrailingActions,
@@ -27,6 +29,7 @@ import { findToUserName, findFromUserName } from "../helpers/index";
 import LendsList from "../components/Home/LendsList";
 import HeaderApp from "../components/Home/HeaderApp";
 import NoCompanyAlert from "../components/Home/NoCompanyAlert";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
@@ -49,6 +52,7 @@ const Home = () => {
     wasReturned: true,
     deleted: false,
   });
+  const navigate = useNavigate();
 
   const openDeleteConfirmation = (item) => {
     Modal.confirm({
@@ -135,6 +139,28 @@ const Home = () => {
       },
     });
   };
+  useEffect(() => {
+    if (!user?.company || user.company === "null" || user.company === "") {
+      const getOut = () => {
+        try {
+          setTimeout(async () => {
+            setUser(null);
+            setUsers([]);
+            setReturnData([]);
+            setBelongsData([]);
+            setLoading(false);
+            await signOut(auth);
+            console.log("User signed out successfully");
+            navigate("/");
+          }, 4000);
+        } catch (error) {
+          console.error("Error signing out:", error);
+        }
+      };
+      getOut();
+      return;
+    }
+  }, [user]);
 
   useEffect(() => {
     let unsubscribeLeads = () => {};
@@ -143,37 +169,79 @@ const Home = () => {
     const loadData = async () => {
       if (uid) {
         setLoading(true);
-        unsubscribeLeads = getDataFromFirebase(
-          (lends) => {
-            const myLends = lends.filter(
-              (item) => item.fromCompany === company
-            );
-            const mybelongs = lends.filter(
-              (item) => item.toCompany === company
-            );
+        try {
+          unsubscribeUsers = getUsersInFirebase(
+            (data) => {
+              const userDataFromUserLogged = data.filter(
+                ({ uid }) => uid === user.uid
+              )[0];
 
-            setReturnData(myLends);
-            setBelongsData(mybelongs);
-            setLoading(false);
-          },
-          startDate,
-          endDate,
-          filterType
-        );
+              // Actualizar la lista de usuarios y el usuario en memoria
+              setUsers(data);
+              setUser({
+                ...user,
+                ...userDataFromUserLogged,
+              });
+            },
+            (errorMessage) => {
+              setUsers([]);
+              setUser({});
+              message.error({
+                content: errorMessage.message,
+                duration: 4,
+                style: {
+                  position: "fixed",
+                  top: 10,
+                  right: 10,
+                  zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+                  padding: "10px",
+                  borderRadius: 4,
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                },
+              });
+            }
+          );
 
-        unsubscribeUsers = getUsersInFirebase((data) => {
-          const userDataFromUserLogged = data.filter(
-            ({ uid }) => uid === user.uid
-          )[0];
+          unsubscribeLeads = getDataFromFirebase(
+            (lends) => {
+              const myLends = lends.filter(
+                (item) => item.fromCompany === company
+              );
+              const mybelongs = lends.filter(
+                (item) => item.toCompany === company
+              );
 
-          // list users in database
-          setUsers(data);
-          // context user in memory
-          setUser({
-            ...user,
-            ...userDataFromUserLogged,
-          });
-        });
+              setReturnData(myLends);
+              setBelongsData(mybelongs);
+              setLoading(false);
+            },
+            (errorMessage) => {
+              setReturnData([]);
+              setBelongsData([]);
+              setLoading(false);
+              message.error({
+                content: errorMessage.message,
+                duration: 6,
+                style: {
+                  position: "fixed",
+                  top: 10,
+                  right: 10,
+                  zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
+                  padding: "10px",
+                  borderRadius: 4,
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+                },
+              });
+            },
+            startDate,
+            endDate,
+            filterType
+          );
+        } catch (error) {
+          console.log(error);
+        }
+
+        // si existe error manejarlo
       } else {
         setLoading(false);
       }
