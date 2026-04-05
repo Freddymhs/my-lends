@@ -22,3 +22,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *.env
+
+# AI / herramientas de desarrollo
+.claude/settings.local.json
+.serena/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Entornos
+.env
+!.env.example
