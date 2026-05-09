@@ -11,7 +11,7 @@
 |---|---|---|---|
 | A1 | `src/helpers.js:14` | `LEADS_REF` (typo: el proyecto se llama "lends", no "leads"). El string es correcto (`"/lends"`) pero la constante delata copy-paste de otro contexto. | Renombrar a `LENDS_REF`. |
 | A2 | `src/helpers/index.js:4,11,18,25` | Placeholder genérico `"Email no encontrado"` se muestra cuando no se resuelve el `displayName` — confunde al usuario porque NO se buscó un email. | Cambiar a `"Usuario no encontrado"` o `"Sin nombre"`. |
-| A3 | `src/helpers.js:256` (comentado) | Línea muerta replica el typo `LEADS_REF`. | Eliminar bloque comentado completo (252–303). |
+| ~~A3~~ ✅ Resuelto (Tarea 1.A) | `src/helpers.js` | Bloque comentado de implementación antigua (~52 líneas) eliminado el 2026-05-09. |
 | A4 | `src/components/Home/AddLoanModal.js:81,84` | Labels en inglés: `"FROM COMPANY"`, `"TO COMPANY"` en campos hidden, mientras toda la UI está en español. | Eliminar labels (campos ocultos no requieren) o traducir a `"Empresa origen"`/`"Empresa destino"`. |
 | A5 | `public/manifest.json:6` | Doble slash: `"./icons//favicon.ico"`. | `"./icons/favicon.ico"`. |
 | A6 | `public/manifest.json:22` | MIME inválido: `"icons/image/png"`. | `"image/png"`. |
@@ -175,7 +175,7 @@
 |---|---|---|---|---|
 | 1 | Extraer `TOAST_STYLE` constante (8 duplicados → 1) | helpers.js / Login.js / Home.js | 10 min | Alto |
 | 2 | Renombrar `LEADS_REF` → `LENDS_REF` | helpers.js:14 | 2 min | Medio |
-| 3 | Eliminar 51 líneas de código comentado | helpers.js:252-303 | 2 min | Medio |
+| ~~3~~ ✅ | ~~Eliminar 51 líneas de código comentado~~ | helpers.js | Resuelto (Tarea 1.A) | — |
 | 4 | Limpiar boilerplate CSS (`App.css`) | App.css | 3 min | Medio |
 | 5 | `aria-label` en 4 botones de solo icono | HeaderApp/LogOut/AddLoan/Home | 10 min | Alto a11y |
 | 6 | Crear `.env.example` | raíz | 3 min | Alto DX |

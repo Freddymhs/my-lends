@@ -10,17 +10,17 @@
 
 ## Tareas
 
-### Tarea 1.A: Eliminar imports muertos y code muerto (build fix)
+### Tarea 1.A: ✅ Resuelto (2026-05-09) — Eliminar imports muertos y code muerto
 
-- **Archivos:** `src/pages/Home.js`, `src/components/Home/HeaderApp.js`, `src/components/Home/LogOutDropdown.js`, `src/helpers.js`, `src/components/Home/LendsList.js`
-- **Qué hacer:**
-  - `Home.js`: eliminar imports de `PlusOutlined`, `deleteItemFromDatabase`, `Alert`
-  - `HeaderApp.js`: eliminar imports de `Tabs`, `Spin`, `Card`
-  - `LogOutDropdown.js`: eliminar `_` del destructuring de `useContext`
-  - `helpers.js`: eliminar import de `remove`
-  - `helpers.js`: eliminar el bloque comentado al final del archivo (~60 líneas)
-  - `LendsList.js`: eliminar el bloque comentado del Card antiguo (~85 líneas, líneas 244–329)
-- **Resultado esperado:** `npm run build` sin warnings de ESLint
+- **Archivos modificados:** `src/pages/Home.js`, `src/components/Home/HeaderApp.js`, `src/components/Home/LogOutDropdown.js`, `src/helpers.js`, `src/components/Home/LendsList.js`
+- **Implementación:**
+  - `Home.js`: eliminados `PlusOutlined`, `deleteItemFromDatabase`, `Alert` del antd import + comentario huérfano `// deleteItemFromDatabase(item);`.
+  - `HeaderApp.js`: eliminados `Tabs`, `Spin`, `Card` del import (quedan `Button`, `Col`, `Row`, `Divider`).
+  - `LogOutDropdown.js`: `const { _, setUser } = useContext(...)` → `const { setUser } = useContext(...)`.
+  - `helpers.js`: eliminado import de `remove` + comentario inline `// await remove(leadRef);` (L153) + bloque comentado completo de implementación antigua (52 líneas).
+  - `LendsList.js`: eliminado bloque comentado del `<Card>` antiguo (86 líneas, L244-329).
+- **Resultado:** -149 líneas netas. Build pasa con bundle 433.79 KB gzip.
+- **Pendiente:** 3 warnings `react-hooks/exhaustive-deps` (LogOutDropdown.js:29, Home.js:160, Home.js:253) **delegados a Tarea 1.F** — no son fixes triviales (Home.js:253 requiere refactor para evitar loop infinito).
 
 ### Tarea 1.B: Eliminar console.log de producción
 

@@ -11,20 +11,18 @@ import {
   LeadingActions,
 } from "react-swipeable-list";
 import "react-swipeable-list/dist/styles.css";
-import { PlusOutlined } from "@ant-design/icons";
 import "../styles/FloatingButton.css";
 import {
   addNewItemToDatabase,
   getDataFromFirebase,
   getUsersInFirebase,
-  deleteItemFromDatabase,
   changeStateOfItemInDatabase,
 } from "../helpers";
 import AddLoanModal from "../components/Home/AddLoanModal";
 import { UserContext } from "../UserContext";
 import DateRangeFilter from "../components/DateRangeFilter";
 import Filters from "../Filters";
-import { Modal, Alert } from "antd";
+import { Modal } from "antd";
 import { findToUserName, findFromUserName } from "../helpers/index";
 import LendsList from "../components/Home/LendsList";
 import HeaderApp from "../components/Home/HeaderApp";
@@ -63,7 +61,6 @@ const Home = () => {
       okType: "danger",
       centered: true,
       onOk() {
-        // deleteItemFromDatabase(item);
         changeStateOfItemInDatabase(
           item,
           { uid, displayName, comment: "deleted" },

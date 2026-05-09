@@ -15,7 +15,7 @@ const menuItems = [
 
 const LogoutDropdown = () => {
   const navigate = useNavigate();
-  const { _, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const handleLogout = useCallback(async () => {
     try {

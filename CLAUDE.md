@@ -38,7 +38,7 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Mobile UX:** `react-device-detect` controls layout; `react-swipeable-list` provides swipe-to-act on mobile (swipe left = delete, swipe right = mark returned).
 
-**Note:** `src/helpers.js` has dead code at the bottom (commented-out old implementation). Ignore it.
+**Bundle baseline (post FASE 1.A):** ~433 KB gzip (CRA + react 18 + antd 5 + firebase 10 + moment + workbox + react-router-dom). Reduction targets are in FASE 7.F and `docs/ANALISIS_TECNICO_DETALLADO.md` §18.
 
 ## Project documentation
 

@@ -81,7 +81,7 @@ Capa de acceso a datos. Todas las operaciones Firebase viven aquí. API exportad
 | `deleteItemFromDatabase(item)` | Soft delete (marca `deleted: true`). No borra nada. |
 | `changeNumberOfColumnsInDatabase(n, user)` | Actualiza preferencia de columnas del usuario. |
 
-> **Nota**: al final del archivo hay código comentado (implementación anterior). Es código muerto — ignorar.
+> ✅ Resuelto (2026-05-09, Tarea 1.A) — el bloque comentado al final del archivo fue eliminado (~52 líneas).
 
 ### Flujo de datos en Home.js
 
@@ -149,8 +149,8 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 | Componente | Archivo | Rol |
 |---|---|---|
-| `Home` | `pages/Home.js` (369 líneas) | Orquestador principal. Maneja toda la lógica de estado, filtros, confirmaciones y suscripciones. |
-| `LendsList` | `components/Home/LendsList.js` (338 líneas) | Lista renderizada con Collapse + Swipeable. Incluye lógica de estado visual (íconos) y historial de cambios. Tiene ~80 líneas de código comentado (Card antiguo). |
+| `Home` | `pages/Home.js` (~366 líneas) | Orquestador principal. Maneja toda la lógica de estado, filtros, confirmaciones y suscripciones. |
+| `LendsList` | `components/Home/LendsList.js` (~252 líneas) | Lista renderizada con Collapse + Swipeable. Incluye lógica de estado visual (íconos) y historial de cambios. |
 | `AddLoanModal` | `components/Home/AddLoanModal.js` | Formulario de creación. Filtra usuarios por empresa. `toCompany` se sincroniza manualmente al form. |
 | `HeaderApp` | `components/Home/HeaderApp.js` | Header con logout y toggle de columnas mobile. |
 | `Filters` | `Filters.js` | TreeSelect multicheck para filtrar por estado. |
@@ -200,8 +200,8 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 ## Deuda técnica
 
-- `helpers.js` tiene ~60 líneas de código comentado al final (implementación antigua).
-- `LendsList.js` tiene ~85 líneas de código comentado (Card antiguo).
+- ~~`helpers.js` tiene ~60 líneas de código comentado al final~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
+- ~~`LendsList.js` tiene ~85 líneas de código comentado~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
 - `console.log` en 3+ archivos que llegan a producción.
 - `moment.js` en lugar de `dayjs`.
 - 3 APIs deprecadas de Ant Design 5 generando warnings silenciosos.
@@ -233,7 +233,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **~~Prioridad 3 — Filtro de estados~~ ✅ Resuelto (2026-05-09)**: ~~revisar y corregir la lógica en `getDataFromFirebase`~~ — Tarea 0.C cerrada. El filtro siempre fue funcionalmente correcto; el cleanup eliminó la duplicación literal y renombró variables.
 
-**Prioridad 4 — Limpieza de deuda**: eliminar código comentado, reemplazar APIs deprecadas de Ant Design 5, y eliminar `console.log` de producción.
+**Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A cerrada 2026-05-09); pendiente reemplazar APIs deprecadas de Ant Design 5 (Tarea 1.C) y eliminar `console.log` de producción (Tarea 1.B).
 
 **Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios, y extraer lógica de `Home.js` a custom hooks.
 

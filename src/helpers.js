@@ -1,12 +1,4 @@
-import {
-  onValue,
-  push,
-  ref,
-  remove,
-  set,
-  query,
-  update,
-} from "firebase/database";
+import { onValue, push, ref, set, query, update } from "firebase/database";
 import moment from "moment";
 import { database } from "./firebase-config";
 import { message } from "antd";
@@ -150,7 +142,7 @@ export const deleteItemFromDatabase = async (item) => {
   const leadRef = ref(database, `${LEADS_REF}/${id}`);
 
   try {
-    itemUpdated.deleted = true; // await remove(leadRef);
+    itemUpdated.deleted = true;
 
     await set(leadRef, { ...itemUpdated });
     message.success({
@@ -243,55 +235,3 @@ export const changeNumberOfColumnsInDatabase = async (
     handleDatabaseError("changeNumberOfColumnsInDatabase")(error);
   }
 };
-//
-// import { onValue, push, ref, remove, set } from "firebase/database";
-// import { database } from "./firebase-config";
-
-// const LEADS_REF = "/lends";
-// const USERS_REF = "/users";
-
-// const convertToArray = (obj) =>
-//   obj ? Object.entries(obj).map(([id, value]) => ({ id, ...value })) : [];
-
-// const handleDatabaseOperation = async (operation, func) => {
-//   try {
-//     await func();
-//   } catch (error) {
-//     console.error(`Error en ${operation}:`, error);
-//     throw error;
-//   }
-// };
-
-// export const addNewItemToDatabase = (newItem) =>
-//   handleDatabaseOperation("addNewItemToDatabase", () =>
-//     push(ref(database, LEADS_REF), {
-//       ...newItem,
-//       date: newItem.date.format("DD-MM-YYYY"),
-//     })
-//   );
-
-// export const getDataFromFirebase = (callback) => {
-//   if (typeof callback !== "function") {
-//     console.error("getDataFromFirebase: callback debe ser una función");
-//     return () => {};
-//   }
-
-//   return onValue(ref(database, LEADS_REF), (snapshot) => {
-//     callback(convertToArray(snapshot.val()));
-//   });
-// };
-
-// export const getUsersInFirebase = (callback) =>
-//   onValue(ref(database, USERS_REF), (snapshot) => {
-//     callback(convertToArray(snapshot.val()));
-//   });
-
-// export const uploadDataToFirebase = (data) =>
-//   handleDatabaseOperation("uploadDataToFirebase", () =>
-//     set(ref(database, LEADS_REF), data)
-//   );
-
-// export const deleteItemFromDatabase = ({ id }) =>
-//   handleDatabaseOperation("deleteItemFromDatabase", () =>
-//     remove(ref(database, `${LEADS_REF}/${id}`))
-//   );

@@ -1,4 +1,4 @@
-import { Tabs, Button, Col, Row, Spin, Divider, Card } from "antd";
+import { Button, Col, Row, Divider } from "antd";
 import { ColumnWidthOutlined } from "@ant-design/icons";
 import { Header } from "antd/es/layout/layout";
 import { changeNumberOfColumnsInDatabase } from "../../helpers";
