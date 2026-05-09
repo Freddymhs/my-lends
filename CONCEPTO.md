@@ -36,7 +36,7 @@ El modelo es **B2B interno**: un usuario pertenece a una `company`, y puede pres
 /lends   → pages/Home.js      (protegida de facto por UserContext)
 ```
 
-No existe un guard de ruta explícito. La protección es implícita: `Home.js` redirige al login si no hay `uid` en contexto, y `Login.js` redirige a `/lends` si ya hay sesión. Es frágil — acceder a `/lends` directamente sin sesión puede causar estado inconsistente.
+`/lends` está protegida por `<PrivateRoute>` (`src/components/PrivateRoute.js`) que redirige a `/` si no hay `user.uid`. Hay además un catch-all `path="*"` que envía a `/` cualquier URL inválida. `Login.js` redirige a `/lends` si ya hay sesión. **Importante:** este guard es de UX, no perímetro de seguridad real — la protección efectiva vive en las reglas de Firebase (FASE 6). Ver `docs/decisions/DECISION_AUTH_GUARD.md`.
 
 ### Estado global
 
@@ -167,7 +167,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 | Área | Archivo | Razón |
 |---|---|---|
 | ~~Lógica de autenticación y registro~~ ✅ Resuelto | `pages/Login.js:55–61` | ~~Al registrar un usuario nuevo, `setUser` usa `userPropsInRealtimeDB?.company` que es `undefined`.~~ **Tarea 0.A cerrada (2026-05-09):** ahora usa los literales `"null"` y `2`. Nota: el bug nunca era observable (Home.js:143 cubre `undefined`/`"null"`/`""` con un check generoso) — era inconsistencia DB↔Context, no UX rota. |
-| Guard de ruta inexistente | `App.js` / `pages/Home.js` | No hay `PrivateRoute`. Cualquiera puede acceder a `/lends` sin sesión — `uid` será null, se llama a `setLoading(false)` y se muestra la UI vacía sin redirección clara. |
+| ~~Guard de ruta inexistente~~ ✅ Resuelto | `App.js` + `src/components/PrivateRoute.js` | **Tarea 0.B cerrada (2026-05-09):** `<PrivateRoute>` envuelve `/lends`; URLs inválidas redirigen a `/`. Ver `docs/decisions/DECISION_AUTH_GUARD.md`. |
 | Filtro de estados duplicado | `helpers.js:getDataFromFirebase` | `notReturned` y `wasReturned` tienen exactamente la misma condición (`returnedBy` existe && `returned === false`). El filtro no funciona correctamente para distinguirlos. |
 
 ### Alto
@@ -229,7 +229,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **~~Prioridad 1 — Bug crítico inmediato~~ ✅ Resuelto (2026-05-09)**: ~~corregir el registro de usuarios nuevos en `Login.js:55–61`~~ — Tarea 0.A cerrada. El `setUser` ahora usa los literales `"null"` y `2` consistentes con el `set()`. Re-clasificación tras revisión: el bug **nunca fue observable** (el check de `Home.js:143` lo enmascaraba); era code smell + inconsistencia DB↔Context, no UX rota.
 
-**Prioridad 2 — Guard de ruta**: agregar un `PrivateRoute` wrapper en `App.js` que redirija a `/` si no hay `uid`.
+**~~Prioridad 2 — Guard de ruta~~ ✅ Resuelto (2026-05-09)**: ~~agregar un `PrivateRoute` wrapper en `App.js`~~ — Tarea 0.B cerrada. Ver `src/components/PrivateRoute.js` y `docs/decisions/DECISION_AUTH_GUARD.md`.
 
 **Prioridad 3 — Filtro de estados**: revisar y corregir la lógica en `getDataFromFirebase` para `notReturned` vs `wasReturned`.
 

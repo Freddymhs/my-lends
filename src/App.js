@@ -1,8 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import PrivateRoute from "./components/PrivateRoute";
 import { UserProvider } from "./UserContext";
 
 function App() {
@@ -12,7 +13,15 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/lends" element={<Home />} />
+            <Route
+              path="/lends"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
       </div>

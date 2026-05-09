@@ -31,14 +31,15 @@
   - `numberOfColumns` también queda `undefined` en sesión inicial — Home cae a default por casualidad, no por diseño.
 - **Referencia:** `src/pages/Login.js:46–77`. Validación al final: tras login con user nuevo, `useContext(UserContext)` debe reportar `company === "null"` (string) y `numberOfColumns === 2`, no `undefined`.
 
-### Tarea 0.B: Agregar PrivateRoute en App.js
+### Tarea 0.B: ✅ Resuelto (2026-05-09) — Agregar PrivateRoute en App.js
 
-- **Archivo:** `src/App.js` (modificar)
-- **Qué hacer:**
-  - Crear un componente `PrivateRoute` que lea `user.uid` de `UserContext`.
-  - Si no hay `uid`, redirigir a `/`.
-  - Envolver la ruta `/lends` con `PrivateRoute`.
-- **Referencia:** `src/App.js`, `src/UserContext.js`
+- **Archivos:** `src/App.js` (modificado), `src/components/PrivateRoute.js` (nuevo)
+- **Implementación:**
+  - `PrivateRoute` lee `user.uid` de `UserContext`. Si falta, retorna `<Navigate to="/" replace />`.
+  - `/lends` envuelta. Catch-all `path="*" → /` añadido para URLs inválidas.
+  - Severidad real (post-traza): 🟡 Medio-Alto. Antes había ~4 s de pantalla blanca por el `setTimeout` de `Home.js:142-160` antes de redirigir; ahora redirección instantánea. No era bug crítico de seguridad — el perímetro real son las reglas Firebase (FASE 6).
+- **Decisión arquitectónica:** `docs/decisions/DECISION_AUTH_GUARD.md`
+- **Referencia:** `src/components/PrivateRoute.js`, `src/App.js`
 
 ### Tarea 0.C: Corregir lógica de filtro notReturned vs wasReturned
 

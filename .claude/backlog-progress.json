@@ -3,7 +3,7 @@
   "tech": "React 18 (CRA) + Firebase Realtime DB + Ant Design 5 + PWA",
   "current_phase": "FASE_0",
   "phases": {
-    "FASE_0": { "status": "in_progress", "name": "Bugs Críticos", "tasks": 3, "completed_tasks": ["0.A"] },
+    "FASE_0": { "status": "in_progress", "name": "Bugs Críticos", "tasks": 3, "completed_tasks": ["0.A", "0.B"] },
     "FASE_1": { "status": "pending", "name": "Refactor & Limpieza", "tasks": 7 },
     "FASE_2": { "status": "pending", "name": "Company Self-Assignment + Modo Personal", "tasks": 5 },
     "FASE_3": { "status": "pending", "name": "Features Nuevas (placeholder)", "tasks": 0 },

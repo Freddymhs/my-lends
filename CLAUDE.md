@@ -24,7 +24,7 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Routing:**
 - `/` → `pages/Login.js`
-- `/lends` → `pages/Home.js`
+- `/lends` → `pages/Home.js`, protegida por `<PrivateRoute>` (`src/components/PrivateRoute.js`); URLs inválidas redirigen a `/`. Ver `docs/decisions/DECISION_AUTH_GUARD.md`.
 
 **Multi-tenancy:** Data is scoped by `company`. A lend has both `fromCompany` and `toCompany`. `Home.js` separates data into "Préstamos" (lends the user's company made) and "Deudas" (lends received by the user's company). Users without a `company` are signed out automatically after 4 seconds.
 
