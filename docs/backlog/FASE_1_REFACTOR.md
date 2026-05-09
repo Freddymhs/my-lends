@@ -22,10 +22,15 @@
 - **Resultado:** -149 líneas netas. Build pasa con bundle 433.79 KB gzip.
 - **Pendiente:** 3 warnings `react-hooks/exhaustive-deps` (LogOutDropdown.js:29, Home.js:160, Home.js:253) **delegados a Tarea 1.F** — no son fixes triviales (Home.js:253 requiere refactor para evitar loop infinito).
 
-### Tarea 1.B: Eliminar console.log de producción
+### Tarea 1.B: ✅ Resuelto (2026-05-09) — Eliminar console.log de producción
 
-- **Archivos:** `src/pages/Login.js:28`, `src/pages/Home.js:240`, `src/components/Home/LogOutDropdown.js:22`
-- **Qué hacer:** Eliminar los tres `console.log` con datos de usuario
+- **Archivos modificados:** `src/pages/Login.js`, `src/pages/Home.js`, `src/components/Home/LogOutDropdown.js`, `src/components/DateRangeFilter.js`, `src/components/Home/AddLoanModal.js`
+- **Implementación:**
+  - Scope ampliado tras inspección: 13 `console.*` totales detectados → 8 logs informacionales eliminados, 1 log ascendido a `console.error` con mensaje descriptivo (`Home.js:234`), 1 catch silenciado con comentario explicativo (`AddLoanModal.js`).
+  - Archivos limpiados: `Login.js` (-2 logs), `Home.js` (-3 logs + 1 ascenso), `LogOutDropdown.js` (-1 log), `DateRangeFilter.js` (-1 log).
+  - 5 `console.error` mantenidos en catches genuinos (`helpers.js`, `Home.js:150`, `Home.js:234`, `LogOutDropdown.js:26`) hasta que se introduzca un logger centralizado en FASE 5/6.
+- **Convención persistida:** `CLAUDE.md` sección "Logging convention" documenta la regla.
+- **Resultado:** -10 líneas. Bundle gzip -126 B.
 
 ### Tarea 1.C: Reemplazar APIs deprecadas de Ant Design 5
 

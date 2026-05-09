@@ -11,8 +11,6 @@ const DateRangeFilter = ({ onFilter, dateRange, setDateRange }) => {
       const start = dateRange[0].startOf("day").toDate();
       const end = dateRange[1].endOf("day").toDate();
       onFilter(start, end);
-    } else {
-      console.log("Por favor selecciona un rango de fechas válido");
     }
   };
 

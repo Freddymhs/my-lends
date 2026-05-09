@@ -20,7 +20,6 @@ const LogoutDropdown = () => {
   const handleLogout = useCallback(async () => {
     try {
       await signOut(auth);
-      console.log("User signed out successfully");
       setUser(null);
       navigate("/"); // Redirect to home page after logout
     } catch (error) {

@@ -124,16 +124,13 @@ const Home = () => {
       okType: "primary",
       centered: true,
       onOk() {
-        console.log("El estado del item ha sido cambiado por", uid);
         changeStateOfItemInDatabase(
           item,
           { uid, displayName, comment },
           "returned"
         );
       },
-      onCancel() {
-        console.log("Operación cancelada.");
-      },
+      onCancel() {},
     });
   };
   useEffect(() => {
@@ -147,7 +144,6 @@ const Home = () => {
             setBelongsData([]);
             setLoading(false);
             await signOut(auth);
-            console.log("User signed out successfully");
             navigate("/");
           }, 4000);
         } catch (error) {
@@ -235,10 +231,8 @@ const Home = () => {
             filterType
           );
         } catch (error) {
-          console.log(error);
+          console.error("Error fetching lends/users:", error);
         }
-
-        // si existe error manejarlo
       } else {
         setLoading(false);
       }

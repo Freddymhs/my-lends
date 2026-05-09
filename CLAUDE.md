@@ -50,3 +50,7 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 - **Concepto**: `CONCEPTO.md` (raíz, ~11 KB) es análisis técnico extendido. `docs/_CONCEPTO.md` (~1 KB) es el brief original del backlog (no editar). **No son duplicados.**
 - **Diagramas**: `docs/diagrams/DIAGRAMAS_*.md` (componentes, secuencia, estados) — referencia estructural estable.
 - **Flujos**: `docs/flows.md` — guía manual para QA y E2E.
+
+## Logging convention
+
+`console.log` está prohibido en código de producción (`src/`). Usar `console.error` solo en `catch` genuinos como último recurso de debugging — un logger centralizado se introducirá en FASE 5/6. Si un `catch` debe silenciar errores esperados (ej. validación de antd Form), añadir comentario explicativo.

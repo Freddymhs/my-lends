@@ -25,7 +25,6 @@ const Login = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-        console.log("User signed in:", user);
 
         // Verificar si el usuario ya está registrado en Firebase Realtime Database
         const userRef = ref(database, `users/${user.uid}`);
@@ -34,7 +33,6 @@ const Login = () => {
           .then((snapshot) => {
             const userPropsInRealtimeDB = snapshot.val();
             if (snapshot.exists()) {
-              console.log("User already exists in database");
               setUser({
                 uid: user.uid,
                 email: user.email,

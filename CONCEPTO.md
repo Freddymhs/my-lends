@@ -185,7 +185,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 |---|---|---|
 | `LendsList` con código muerto | `components/Home/LendsList.js:244–329` | ~85 líneas comentadas de la implementación con `Card` anterior. Aumenta el tamaño del archivo sin valor. |
 | `toCompany` sincronización manual | `AddLoanModal.js:156–157` | `toCompany` se guarda en estado local Y en el form (`setFieldsValue`). Si hay un error en el `onChange`, queda desincronizado. |
-| `console.log` en producción | `Login.js:28`, `Home.js:240`, `LogOutDropdown.js:22` | Hay `console.log` con datos de usuario que llegan a producción. |
+| ~~`console.log` en producción~~ ✅ Resuelto | varios | **Tarea 1.B cerrada (2026-05-09):** 8 `console.log` eliminados (en `Login`, `Home`, `LogOutDropdown`, `DateRangeFilter`) + 1 `console.log` ascendido a `console.error` con mensaje descriptivo. Quedan 5 `console.error` en catches genuinos hasta tener logger central (FASE 5/6). |
 | `let` implícito en modal | `Home.js:71` | `let comment = ""` dentro del `content` del Modal — muta una variable de closure. Funciona, pero es frágil si el modal se re-renderiza. |
 
 ### Bajo
@@ -202,7 +202,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 - ~~`helpers.js` tiene ~60 líneas de código comentado al final~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
 - ~~`LendsList.js` tiene ~85 líneas de código comentado~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
-- `console.log` en 3+ archivos que llegan a producción.
+- ~~`console.log` en 3+ archivos que llegan a producción~~ ✅ Resuelto (Tarea 1.B, 2026-05-09).
 - `moment.js` en lugar de `dayjs`.
 - 3 APIs deprecadas de Ant Design 5 generando warnings silenciosos.
 - `company` como string libre sin validación ni enum → riesgo de datos corruptos.
@@ -233,7 +233,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **~~Prioridad 3 — Filtro de estados~~ ✅ Resuelto (2026-05-09)**: ~~revisar y corregir la lógica en `getDataFromFirebase`~~ — Tarea 0.C cerrada. El filtro siempre fue funcionalmente correcto; el cleanup eliminó la duplicación literal y renombró variables.
 
-**Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A cerrada 2026-05-09); pendiente reemplazar APIs deprecadas de Ant Design 5 (Tarea 1.C) y eliminar `console.log` de producción (Tarea 1.B).
+**Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A); ~~eliminar `console.log` de producción~~ ✅ (Tarea 1.B); pendiente reemplazar APIs deprecadas de Ant Design 5 (Tarea 1.C).
 
 **Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios, y extraer lógica de `Home.js` a custom hooks.
 

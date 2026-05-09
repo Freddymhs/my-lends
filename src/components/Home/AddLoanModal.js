@@ -42,8 +42,9 @@ const AddLoanModal = ({
       onCreate(values);
       setVisible(false);
       form.resetFields();
-    } catch (error) {
-      console.error("Validation failed:", error);
+    } catch {
+      // antd Form.validateFields rejects when there are validation errors;
+      // antd already shows the errors inline, no extra logging needed.
     }
   };
 

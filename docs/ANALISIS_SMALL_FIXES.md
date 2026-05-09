@@ -149,10 +149,10 @@
 | # | Archivo:Línea | Issue |
 |---|---|---|
 | L1 | `src/UserContext.js:8,15` | `localStorage` key `"user"` muy genérico. Conflicto con otras apps en el mismo dominio. Usar `"lends:user:v1"`. |
-| L2 | `src/pages/Login.js:28` | `console.log("User signed in:", user)` expone `email` y `displayName` en consola pública. |
-| L3 | `src/pages/Login.js:37` | `console.log("User already exists in database")` ruido en producción. |
-| L4 | `src/pages/Home.js:130` | `console.log("El estado del item ha sido cambiado por", uid)` expone UID. |
-| L5 | `src/components/Home/LogOutDropdown.js:23` | `console.log("User signed out successfully")` ruido. |
+| ~~L2~~ ✅ Resuelto (Tarea 1.B) | `src/pages/Login.js` | `console.log("User signed in:", user)` eliminado. |
+| ~~L3~~ ✅ Resuelto (Tarea 1.B) | `src/pages/Login.js` | `console.log("User already exists in database")` eliminado. |
+| ~~L4~~ ✅ Resuelto (Tarea 1.B) | `src/pages/Home.js` | `console.log("El estado del item ha sido cambiado por", uid)` eliminado. |
+| ~~L5~~ ✅ Resuelto (Tarea 1.B) | `src/components/Home/LogOutDropdown.js` | `console.log("User signed out successfully")` eliminado. |
 | L6 | `public/index.html` | Sin Content-Security-Policy meta (depende del hosting, pero un `<meta http-equiv="Content-Security-Policy">` mínimo previene XSS basico). |
 
 ---
@@ -181,7 +181,7 @@
 | 6 | Crear `.env.example` | raíz | 3 min | Alto DX |
 | 7 | Renombrar archivos `-favicon.ico` → `favicon.ico` | public/ | 5 min | Medio |
 | 8 | `<title>` descriptivo + metas OG/Twitter | public/index.html | 10 min | Alto SEO |
-| 9 | Quitar 5 `console.log` con PII | Login/Home/LogOut | 5 min | Medio seguridad |
+| ~~9~~ ✅ | ~~Quitar 5 `console.log` con PII~~ | Login/Home/LogOut | Resuelto (Tarea 1.B) | — |
 | 10 | Cambiar `ref(database, "users/...")` por `${USERS_REF}/...` | Login.js:31 | 2 min | Bajo |
 | 11 | Consolidar `helpers.js` + `helpers/index.js` | src/ | 15 min | Alto mantenibilidad |
 | 12 | Cancelar `setTimeout` de getOut en cleanup | Home.js:142-163 | 5 min | Alto (bug B4) |
