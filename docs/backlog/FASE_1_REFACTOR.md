@@ -1,0 +1,80 @@
+# FASE 1: Refactor & Limpieza
+
+**Status:** ⏸️ PENDIENTE
+**Prioridad:** 🔴 Alta
+**Dependencias:** FASE 0 completada
+
+> Respetar la estructura actual. Sin cambiar comportamiento observable. El objetivo es que el código sea mantenible antes de agregar features.
+
+---
+
+## Tareas
+
+### Tarea 1.A: Eliminar imports muertos y code muerto (build fix)
+
+- **Archivos:** `src/pages/Home.js`, `src/components/Home/HeaderApp.js`, `src/components/Home/LogOutDropdown.js`, `src/helpers.js`, `src/components/Home/LendsList.js`
+- **Qué hacer:**
+  - `Home.js`: eliminar imports de `PlusOutlined`, `deleteItemFromDatabase`, `Alert`
+  - `HeaderApp.js`: eliminar imports de `Tabs`, `Spin`, `Card`
+  - `LogOutDropdown.js`: eliminar `_` del destructuring de `useContext`
+  - `helpers.js`: eliminar import de `remove`
+  - `helpers.js`: eliminar el bloque comentado al final del archivo (~60 líneas)
+  - `LendsList.js`: eliminar el bloque comentado del Card antiguo (~85 líneas, líneas 244–329)
+- **Resultado esperado:** `npm run build` sin warnings de ESLint
+
+### Tarea 1.B: Eliminar console.log de producción
+
+- **Archivos:** `src/pages/Login.js:28`, `src/pages/Home.js:240`, `src/components/Home/LogOutDropdown.js:22`
+- **Qué hacer:** Eliminar los tres `console.log` con datos de usuario
+
+### Tarea 1.C: Reemplazar APIs deprecadas de Ant Design 5
+
+- **Archivos:** `src/components/Home/AddLoanModal.js`, `src/components/Home/LogOutDropdown.js`, `src/pages/Home.js`
+- **Qué hacer:**
+  - `AddLoanModal.js:72`: `visible` → `open`
+  - `LogOutDropdown.js:42`: `overlay={<Menu>}` → prop `menu={{ items: menuItems, onClick: handleMenuClick }}`
+  - `Home.js`: reemplazar `<TabPane>` por array `items` en `<Tabs>`
+
+### Tarea 1.D: Migrar moment.js → dayjs
+
+- **Archivos:** `src/helpers.js`, `src/components/Home/LendsList.js`, `src/components/Home/AddLoanModal.js`
+- **Qué hacer:**
+  - Instalar `dayjs` (ya incluido por Ant Design 5, solo importar)
+  - Reemplazar `import moment from 'moment'` por `import dayjs from 'dayjs'`
+  - Reemplazar `import 'moment/locale/es'` por `import 'dayjs/locale/es'; dayjs.locale('es')`
+  - Adaptar los formatos: `moment(x, fmt)` → `dayjs(x, fmt)`, `.format()` igual
+  - Desinstalar `moment` del `package.json`
+
+### Tarea 1.E: Extraer lógica de Home.js a custom hooks
+
+- **Archivos:** `src/hooks/useLends.js` (crear), `src/hooks/useUsers.js` (crear), `src/pages/Home.js` (modificar)
+- **Qué hacer:**
+  - `useLends(uid, company, startDate, endDate, filterType)` → encapsula la suscripción a Firebase de préstamos y retorna `{ returnData, belongsData, loading }`
+  - `useUsers(uid)` → encapsula la suscripción a Firebase de usuarios y retorna `{ users }`
+  - `Home.js` queda solo como orquestador de UI y confirmaciones
+
+### Tarea 1.F: Corregir useCallback y useEffect dependencies
+
+- **Archivos:** `src/components/Home/LogOutDropdown.js:29`, `src/pages/Home.js:163`, `src/pages/Home.js:256`
+- **Qué hacer:**
+  - `LogOutDropdown`: agregar `setUser` a deps de `useCallback` (estable porque viene de Context)
+  - `Home.js:163`: evaluar si agregar `navigate` y `setUser` o estabilizar con `useRef`
+  - `Home.js:256`: agregar `setUser` — verificar que no genera loop (depende de la tarea 1.E)
+
+### Tarea 1.G: Refactorizar let mutable en modal de cambio de estado
+
+- **Archivo:** `src/pages/Home.js:71`
+- **Qué hacer:**
+  - `let comment = ""` dentro del `content` del Modal es una variable closure mutable.
+  - Usar `useRef` o extraer a un componente propio que maneje el estado del textarea internamente.
+
+---
+
+## Criterios de Aceptación
+
+- [ ] `npm run build` compila sin ningún warning ni error
+- [ ] No hay `console.log` en archivos de `src/`
+- [ ] No hay warnings de Ant Design en consola del browser
+- [ ] `moment` eliminado del `package.json`
+- [ ] `Home.js` < 200 líneas (lógica de datos extraída a hooks)
+- [ ] Comportamiento de la app idéntico al anterior

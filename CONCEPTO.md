@@ -20,7 +20,7 @@ El modelo es **B2B interno**: un usuario pertenece a una `company`, y puede pres
 | Routing | React Router v6 |
 | Auth | Firebase Authentication (Google OAuth) |
 | Base de datos | Firebase Realtime Database |
-| PWA | Workbox (service worker preconfigurado por CRA) |
+| PWA | Workbox custom en `src/service-worker.js` (actualmente desregistrado en `index.js:18` — ver FASE 6) |
 | Mobile UX | react-device-detect + react-swipeable-list |
 | Fechas | moment.js (locale `es`) |
 | Hosting | Sin configurar (puede ser Firebase Hosting o Vercel) |
@@ -236,3 +236,12 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 **Prioridad 4 — Limpieza de deuda**: eliminar código comentado, reemplazar APIs deprecadas de Ant Design 5, y eliminar `console.log` de producción.
 
 **Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios, y extraer lógica de `Home.js` a custom hooks.
+
+---
+
+## Documentación viva
+
+- Backlog priorizado: [`docs/backlog/README.md`](docs/backlog/README.md)
+- Análisis técnico detallado: [`docs/ANALISIS_TECNICO_DETALLADO.md`](docs/ANALISIS_TECNICO_DETALLADO.md)
+- Small fixes priorizados: [`docs/ANALISIS_SMALL_FIXES.md`](docs/ANALISIS_SMALL_FIXES.md)
+- Diagramas: [`docs/diagrams/`](docs/diagrams/)

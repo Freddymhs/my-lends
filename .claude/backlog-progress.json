@@ -1,0 +1,15 @@
+{
+  "project": "my-lends",
+  "tech": "React 18 (CRA) + Firebase Realtime DB + Ant Design 5 + PWA",
+  "current_phase": "FASE_0",
+  "phases": {
+    "FASE_0": { "status": "pending", "name": "Bugs Críticos", "tasks": 3 },
+    "FASE_1": { "status": "pending", "name": "Refactor & Limpieza", "tasks": 7 },
+    "FASE_2": { "status": "pending", "name": "Company Self-Assignment + Modo Personal", "tasks": 5 },
+    "FASE_3": { "status": "pending", "name": "Features Nuevas (placeholder)", "tasks": 0 },
+    "FASE_4": { "status": "pending", "name": "UI/UX Polish", "tasks": 6 },
+    "FASE_5": { "status": "pending", "name": "Testing", "tasks": 6 },
+    "FASE_6": { "status": "pending", "name": "Producción", "tasks": 6 },
+    "FASE_7": { "status": "pending", "name": "Small Fixes & Polish", "tasks": 14 }
+  }
+}

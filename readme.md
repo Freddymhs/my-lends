@@ -46,3 +46,7 @@ src/
 
 - Status: En desarrollo activo
 - Firebase plan: Spark (gratuito) — 1 GB almacenamiento, 10 GB/mes descarga
+
+## Roadmap y deuda técnica
+
+Ver [`docs/backlog/README.md`](docs/backlog/README.md) para el plan de 7 fases (bugs críticos → producción) y [`docs/ANALISIS_TECNICO_DETALLADO.md`](docs/ANALISIS_TECNICO_DETALLADO.md) para análisis técnico.
