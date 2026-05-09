@@ -166,7 +166,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 | Área | Archivo | Razón |
 |---|---|---|
-| Lógica de autenticación y registro | `pages/Login.js:46–77` | Al registrar un usuario nuevo, `setUser` usa `userPropsInRealtimeDB?.company` que es `undefined` (el snapshot acaba de crearse). El usuario queda con `company: undefined` en contexto aunque en DB tenga `"null"`. Puede causar redirección incorrecta al home y luego expulsión. |
+| ~~Lógica de autenticación y registro~~ ✅ Resuelto | `pages/Login.js:55–61` | ~~Al registrar un usuario nuevo, `setUser` usa `userPropsInRealtimeDB?.company` que es `undefined`.~~ **Tarea 0.A cerrada (2026-05-09):** ahora usa los literales `"null"` y `2`. Nota: el bug nunca era observable (Home.js:143 cubre `undefined`/`"null"`/`""` con un check generoso) — era inconsistencia DB↔Context, no UX rota. |
 | Guard de ruta inexistente | `App.js` / `pages/Home.js` | No hay `PrivateRoute`. Cualquiera puede acceder a `/lends` sin sesión — `uid` será null, se llama a `setLoading(false)` y se muestra la UI vacía sin redirección clara. |
 | Filtro de estados duplicado | `helpers.js:getDataFromFirebase` | `notReturned` y `wasReturned` tienen exactamente la misma condición (`returnedBy` existe && `returned === false`). El filtro no funciona correctamente para distinguirlos. |
 
@@ -227,7 +227,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 ## Recomendación de auditoría
 
-**Prioridad 1 — Bug crítico inmediato**: corregir el registro de usuarios nuevos en `Login.js:55–61`. El `setUser` usa `userPropsInRealtimeDB?.company` que es `undefined` porque el snapshot se acaba de crear. Debe usar el valor escrito explícitamente (`"null"` o el que se pasó al `set()`).
+**~~Prioridad 1 — Bug crítico inmediato~~ ✅ Resuelto (2026-05-09)**: ~~corregir el registro de usuarios nuevos en `Login.js:55–61`~~ — Tarea 0.A cerrada. El `setUser` ahora usa los literales `"null"` y `2` consistentes con el `set()`. Re-clasificación tras revisión: el bug **nunca fue observable** (el check de `Home.js:143` lo enmascaraba); era code smell + inconsistencia DB↔Context, no UX rota.
 
 **Prioridad 2 — Guard de ruta**: agregar un `PrivateRoute` wrapper en `App.js` que redirija a `/` si no hay `uid`.
 

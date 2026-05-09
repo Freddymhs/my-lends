@@ -16,13 +16,20 @@
 
 ## Tareas
 
-### Tarea 0.A: Fix bug registro de usuario nuevo en Login
+### Tarea 0.A: Fix inconsistencia DB ↔ Context en registro de usuario nuevo
+
+> **Nota de re-clasificación (2026-05-09):** originalmente etiquetada como "bug crítico". Tras revisión, **NO es un bug observable hoy** — el check generoso de `Home.js:143` (`!user?.company || user.company === "null" || user.company === ""`) cubre los tres casos. Es un **code smell + inconsistencia de datos** (DB tiene `"null"`, contexto tiene `undefined`). Severidad real: 🟡 Medio. Mantenerla aquí porque sigue siendo trabajo razonable hacer **antes de FASE 1** (refactor) para no llevar la inconsistencia al refactor.
 
 - **Archivo:** `src/pages/Login.js` (modificar)
 - **Qué hacer:**
-  - En el bloque `else` (usuario nuevo), el `setUser` en línea ~59 usa `userPropsInRealtimeDB?.company` que es `undefined` porque el snapshot acaba de crearse.
-  - Reemplazar con los valores que se acaban de escribir en el `set()`: `company: "null"`, `numberOfColumns: 2`.
-- **Referencia:** `src/pages/Login.js:46–77`
+  - En el bloque `else` (usuario nuevo), el `setUser` (~L55-61) usa `userPropsInRealtimeDB?.company` que es `undefined` (el snapshot leído antes confirmó que no existía → `snapshot.val() === null` → optional chaining devuelve `undefined`).
+  - Reemplazar por los valores **literales** recién escritos en el `set()`: `company: "null"`, `numberOfColumns: 2`.
+  - Considerar añadir comentario explicando por qué se usa el sentinel string `"null"` (para no confundir con `null` real).
+- **Por qué importa aunque no rompa hoy:**
+  - Si alguien simplifica el check `Home.js:143` a solo `user.company === "null"`, el bug pasa a ser observable.
+  - `localStorage` con `JSON.stringify` omite `undefined`, así la persistencia queda con shape distinto al esperado.
+  - `numberOfColumns` también queda `undefined` en sesión inicial — Home cae a default por casualidad, no por diseño.
+- **Referencia:** `src/pages/Login.js:46–77`. Validación al final: tras login con user nuevo, `useContext(UserContext)` debe reportar `company === "null"` (string) y `numberOfColumns === 2`, no `undefined`.
 
 ### Tarea 0.B: Agregar PrivateRoute en App.js
 

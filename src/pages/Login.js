@@ -56,8 +56,8 @@ const Login = () => {
                     uid: user.uid,
                     email: user.email,
                     displayName: user.displayName,
-                    company: userPropsInRealtimeDB?.company,
-                    numberOfColumns: userPropsInRealtimeDB?.numberOfColumns,
+                    company: "null",
+                    numberOfColumns: 2,
                   });
                 })
                 .catch((error) => {

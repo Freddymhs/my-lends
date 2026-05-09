@@ -835,7 +835,9 @@ const NoCompanyAlert = () => (
 
 ## 16. Implementación Concreta de los Bugs Críticos (C1–C6)
 
-> Recordatorio del análisis previo (mapeo): C1=auth desincronizada, C2=logout automático con setTimeout, C3=set() destructivo, C4=fechas como string, C5=comment como audit log, C6=reglas Firebase abiertas.
+> **Nota:** la numeración C1–C6 de esta sección es **propia de este documento** (parte 2 del análisis). NO coincide con la numeración "C1=registro de Login" usada en la primera parte del análisis (la que se entregó inline en chat). El bug del registro de Login (`Login.js:46-77`, contexto queda con `company: undefined` mientras la DB tiene `"null"`) es **Tarea 0.A** del backlog y no figura en esta lista C1–C6 — está cubierto en `docs/backlog/FASE_0_BUGS_CRITICOS.md`.
+>
+> **Mapeo C1–C6 de esta sección:** C1=auth desincronizada, C2=logout automático con setTimeout, C3=set() destructivo, C4=fechas como string, C5=comment como audit log, C6=reglas Firebase abiertas.
 
 ### C1 — Auth desincronizada (UserContext + Home)
 
