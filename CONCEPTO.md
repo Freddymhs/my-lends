@@ -118,7 +118,7 @@ Los filtros (`filterType`) corresponden a estos estados:
 | `wasReturned` | `returnedBy` existe && `returned === false` (fue devuelto, luego desmarcado) |
 | `deleted` | `deleted === true` && tiene `deletedBy` |
 
-> **Advertencia**: la lógica de filtro en `helpers.js` tiene redundancia entre `notReturned` y `wasReturned` (misma condición). Revisar antes de tocar.
+> ✅ **Resuelto (2026-05-09)** — Tarea 0.C cerrada. La duplicación literal entre `hasNotReturned` y `hasWasReturned` fue eliminada y los nombres ahora reflejan la intención (`isUntouched`, `isCurrentlyReturned`, `wasReturnedAndUndone`, `isDeleted`). Reclasificación tras revisión: era code smell de naming, NO bug funcional — el filtro siempre distinguió correctamente los 4 estados gracias a la doble negación en la rama de `notReturned`.
 
 ---
 
@@ -168,7 +168,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 |---|---|---|
 | ~~Lógica de autenticación y registro~~ ✅ Resuelto | `pages/Login.js:55–61` | ~~Al registrar un usuario nuevo, `setUser` usa `userPropsInRealtimeDB?.company` que es `undefined`.~~ **Tarea 0.A cerrada (2026-05-09):** ahora usa los literales `"null"` y `2`. Nota: el bug nunca era observable (Home.js:143 cubre `undefined`/`"null"`/`""` con un check generoso) — era inconsistencia DB↔Context, no UX rota. |
 | ~~Guard de ruta inexistente~~ ✅ Resuelto | `App.js` + `src/components/PrivateRoute.js` | **Tarea 0.B cerrada (2026-05-09):** `<PrivateRoute>` envuelve `/lends`; URLs inválidas redirigen a `/`. Ver `docs/decisions/DECISION_AUTH_GUARD.md`. |
-| Filtro de estados duplicado | `helpers.js:getDataFromFirebase` | `notReturned` y `wasReturned` tienen exactamente la misma condición (`returnedBy` existe && `returned === false`). El filtro no funciona correctamente para distinguirlos. |
+| ~~Filtro de estados duplicado~~ ✅ Resuelto | `helpers.js:getDataFromFirebase` | **Tarea 0.C cerrada (2026-05-09):** variables renombradas y duplicación eliminada. Reclasificación: NO era bug funcional — la doble negación en `selectedNotReturned` enmascaraba la duplicación literal de `hasNotReturned == hasWasReturned`. Era code smell de naming, no UX rota. |
 
 ### Alto
 
@@ -231,7 +231,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **~~Prioridad 2 — Guard de ruta~~ ✅ Resuelto (2026-05-09)**: ~~agregar un `PrivateRoute` wrapper en `App.js`~~ — Tarea 0.B cerrada. Ver `src/components/PrivateRoute.js` y `docs/decisions/DECISION_AUTH_GUARD.md`.
 
-**Prioridad 3 — Filtro de estados**: revisar y corregir la lógica en `getDataFromFirebase` para `notReturned` vs `wasReturned`.
+**~~Prioridad 3 — Filtro de estados~~ ✅ Resuelto (2026-05-09)**: ~~revisar y corregir la lógica en `getDataFromFirebase`~~ — Tarea 0.C cerrada. El filtro siempre fue funcionalmente correcto; el cleanup eliminó la duplicación literal y renombró variables.
 
 **Prioridad 4 — Limpieza de deuda**: eliminar código comentado, reemplazar APIs deprecadas de Ant Design 5, y eliminar `console.log` de producción.
 

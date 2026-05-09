@@ -91,23 +91,17 @@ export const getDataFromFirebase = (
         const selectedWasReturned = filterType.wasReturned;
 
         lends = lends.filter((item) => {
-          const hasNotReturned =
-            "returnedBy" in item && item.returned === false;
-          const hasReturned = "returnedBy" in item && item.returned === true;
-          const hasWasReturned =
-            "returnedBy" in item && item.returned === false;
-          const hasDeleted =
-            "deleted" in item && item.deleted === true && item.deletedBy;
+          const hasReturnedField = "returnedBy" in item;
+          const isCurrentlyReturned = hasReturnedField && item.returned === true;
+          const wasReturnedAndUndone = hasReturnedField && item.returned === false;
+          const isDeleted = item.deleted === true && Boolean(item.deletedBy);
+          const isUntouched = !hasReturnedField && !isDeleted;
 
           return (
-            (selectedNotReturned &&
-              !hasNotReturned &&
-              !hasReturned &&
-              !hasWasReturned &&
-              !hasDeleted) ||
-            (selectedReturned && !hasDeleted && hasReturned) ||
-            (selectedWasReturned && !hasDeleted && hasWasReturned) ||
-            (selectedDeleted && hasDeleted)
+            (selectedNotReturned && isUntouched) ||
+            (selectedReturned && !isDeleted && isCurrentlyReturned) ||
+            (selectedWasReturned && !isDeleted && wasReturnedAndUndone) ||
+            (selectedDeleted && isDeleted)
           );
         });
       }

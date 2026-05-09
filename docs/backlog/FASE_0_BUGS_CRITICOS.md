@@ -41,14 +41,16 @@
 - **Decisión arquitectónica:** `docs/decisions/DECISION_AUTH_GUARD.md`
 - **Referencia:** `src/components/PrivateRoute.js`, `src/App.js`
 
-### Tarea 0.C: Corregir lógica de filtro notReturned vs wasReturned
+### Tarea 0.C: ✅ Resuelto (2026-05-09) — Refactor de filtro `notReturned` / `wasReturned`
 
-- **Archivo:** `src/helpers.js` (modificar — función `getDataFromFirebase`)
-- **Qué hacer:**
-  - `notReturned`: ítem sin `returnedBy` y sin `deleted` (nunca fue marcado).
-  - `wasReturned`: tiene `returnedBy` Y `returned === false` (fue devuelto pero se desmarcó).
-  - Actualmente ambos tienen la misma condición — corregir la de `notReturned`.
-- **Referencia:** `src/helpers.js` — bloque del switch de filtros
+- **Archivo:** `src/helpers.js:93-105` (modificado — función `getDataFromFirebase`)
+- **Implementación:**
+  - Eliminada variable duplicada literal (`hasNotReturned` ≡ `hasWasReturned`).
+  - Renombradas para reflejar intención: `isUntouched`, `isCurrentlyReturned`, `wasReturnedAndUndone`, `isDeleted`.
+  - `Boolean(item.deletedBy)` explícito en lugar de truthy implícito.
+  - Eliminada redundancia `"deleted" in item && item.deleted === true` → solo `item.deleted === true`.
+- **Re-clasificación tras revisión:** severidad real **🟢 Bajo** (code smell + naming), NO 🔴 crítico. La afirmación original "el filtro no distingue" era incorrecta — la doble negación en la rama de `selectedNotReturned` (`!hasNotReturned && !hasReturned && !hasWasReturned`) enmascaraba la duplicación y los 4 estados sí se distinguían correctamente.
+- **Referencia:** `src/helpers.js:93-105`, también actualizado `CLAUDE.md` sección "Filter logic" con la semántica formal de los 4 estados.
 
 ---
 

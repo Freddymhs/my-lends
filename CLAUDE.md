@@ -30,7 +30,11 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Lend states:** Items use flags `returned` (bool) and `deleted` (bool). State changes are soft — never hard deletes. `changeStateOfItemInDatabase` in `helpers.js` handles both `"returned"` and `"deleted"` transitions, appending an audit trail to `item.comment`.
 
-**Filter logic:** `getDataFromFirebase` in `helpers.js` applies date range and `filterType` filters server-side before calling back. `filterType` has four keys: `notReturned`, `returned`, `wasReturned`, `deleted`.
+**Filter logic:** `getDataFromFirebase` in `helpers.js` applies date range and `filterType` filters before calling back. The 4 mutually-exclusive item states are:
+- `notReturned` → no `returnedBy` field, not deleted (item never touched)
+- `returned` → has `returnedBy` AND `returned === true` (currently marked returned)
+- `wasReturned` → has `returnedBy` AND `returned === false` (returned then unmarked)
+- `deleted` → `deleted === true` AND `deletedBy` truthy
 
 **Mobile UX:** `react-device-detect` controls layout; `react-swipeable-list` provides swipe-to-act on mobile (swipe left = delete, swipe right = mark returned).
 

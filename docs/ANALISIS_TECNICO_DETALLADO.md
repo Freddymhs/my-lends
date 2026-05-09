@@ -293,7 +293,7 @@ export default app;
   - **L34–L46**: `message.success` con estilos inline duplicados en 4 funciones (DRY violado).
   - No retorna el `id` del nuevo lend → imposible "deshacer" inmediato.
 - **L52–L127 (`getDataFromFirebase`)**:
-  - **L82–L113**: lógica de filtros ENORME y duplicada con `Filters.js`. La condición de "wasReturned" en L97-98 es **idéntica** a "notReturned" en L94-95 (`returned === false`) → bug funcional: nunca diferencia uno del otro.
+  - **L82–L113**: lógica de filtros ENORME y duplicada con `Filters.js`. ~~La condición de "wasReturned" en L97-98 es **idéntica** a "notReturned" en L94-95 (`returned === false`) → bug funcional: nunca diferencia uno del otro.~~ **Corrección (2026-05-09):** las variables eran literalmente duplicadas, pero la **doble negación** en la rama de `selectedNotReturned` (`!hasNotReturned && !hasReturned && !hasWasReturned`) enmascaraba la duplicación y el filtro distinguía correctamente los 4 estados. Era code smell de naming, no bug funcional. Cerrado en Tarea 0.C — variables renombradas a `isUntouched / isCurrentlyReturned / wasReturnedAndUndone / isDeleted`.
   - **L70–L80**: trae **TODO** `/lends` y filtra en cliente (no usa `orderByChild + equalTo`). Para una empresa de 500 préstamos esto descarga los 500.
   - **L117**: `lends.reverse()` en lugar de ordenar por `date` real → si la inserción no fue cronológica, queda mal.
 - **L154–L178 (`deleteItemFromDatabase`)**:
