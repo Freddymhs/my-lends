@@ -1,5 +1,5 @@
 import { onValue, push, ref, set, query, update } from "firebase/database";
-import moment from "moment";
+import dayjs from "./utils/dayjs";
 import { database } from "./firebase-config";
 import { message } from "antd";
 
@@ -66,7 +66,7 @@ export const getDataFromFirebase = (
       // Aplicar filtro de fechas si se proporcionan startDate y endDate
       if (startDate && endDate) {
         lends = lends.filter((item) => {
-          const itemDate = moment(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
+          const itemDate = dayjs(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
           return itemDate >= startDate && itemDate <= endDate;
         });
       }
@@ -170,7 +170,7 @@ export const changeStateOfItemInDatabase = async (
 ) => {
   const { id, returned, ...itemUpdated } = item;
   const leadRef = ref(database, `${LEADS_REF}/${id}`);
-  const newParrafo = `(${moment().format("HH:mm")})${displayName}: ${
+  const newParrafo = `(${dayjs().format("HH:mm")})${displayName}: ${
     comment.trim() || "✉️"
   }`;
 

@@ -38,7 +38,9 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Mobile UX:** `react-device-detect` controls layout; `react-swipeable-list` provides swipe-to-act on mobile (swipe left = delete, swipe right = mark returned).
 
-**Bundle baseline (post FASE 1.A):** ~433 KB gzip (CRA + react 18 + antd 5 + firebase 10 + moment + workbox + react-router-dom). Reduction targets are in FASE 7.F and `docs/ANALISIS_TECNICO_DETALLADO.md` §18.
+**Bundle baseline (post FASE 1.D):** ~414 KB gzip (CRA + react 18 + antd 5 + firebase 10 + dayjs + workbox + react-router-dom). Reduction targets are in FASE 7.F and `docs/ANALISIS_TECNICO_DETALLADO.md` §18.
+
+**Fechas:** usar `import dayjs from "<ruta>/utils/dayjs"` (carga `customParseFormat` plugin + locale `es` una sola vez). No importar `dayjs` directo desde otros archivos — el util central garantiza que el plugin de parse esté cargado.
 
 ## Project documentation
 

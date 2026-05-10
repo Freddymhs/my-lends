@@ -22,7 +22,7 @@ El modelo es **B2B interno**: un usuario pertenece a una `company`, y puede pres
 | Base de datos | Firebase Realtime Database |
 | PWA | Workbox custom en `src/service-worker.js` (actualmente desregistrado en `index.js:18` — ver FASE 6) |
 | Mobile UX | react-device-detect + react-swipeable-list |
-| Fechas | moment.js (locale `es`) |
+| Fechas | dayjs (locale `es`, plugin `customParseFormat`) — ver `src/utils/dayjs.js` |
 | Hosting | Sin configurar (puede ser Firebase Hosting o Vercel) |
 
 ---
@@ -76,7 +76,7 @@ Capa de acceso a datos. Todas las operaciones Firebase viven aquí. API exportad
 |---|---|
 | `getDataFromFirebase(cb, onErr, start, end, filterType)` | Suscripción en tiempo real a `/lends`. Filtra por fecha y estado en cliente. |
 | `getUsersInFirebase(cb, onErr)` | Suscripción en tiempo real a `/users`. |
-| `addNewItemToDatabase(item)` | Push nuevo préstamo. Formatea la fecha con moment antes de guardar. |
+| `addNewItemToDatabase(item)` | Push nuevo préstamo. Formatea la fecha con dayjs antes de guardar. |
 | `changeStateOfItemInDatabase(item, {uid, displayName, comment}, type)` | Cambia estado (`returned` o `deleted`) y appends al historial de `comment`. |
 | `deleteItemFromDatabase(item)` | Soft delete (marca `deleted: true`). No borra nada. |
 | `changeNumberOfColumnsInDatabase(n, user)` | Actualiza preferencia de columnas del usuario. |
@@ -177,7 +177,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 | `company` como string libre | DB `/users` | No hay enum ni validación. Si se escribe distinto (mayúsculas, espacios), los préstamos no matchean. Un typo rompe la multi-tenancy. |
 | `Home.js` sobrerecargado | `pages/Home.js` | 369 líneas con lógica de suscripción, confirmaciones modales, swipe handlers, filtros y navegación. Viola SRP. Difícil de testear y mantener. |
 | Historial de comentarios como string concatenado | `helpers.js:changeStateOfItemInDatabase` | El historial es `item.comment` con `\n` como separador. No es un array — no se puede iterar, ordenar ni paginar. Crece sin límite. |
-| `moment.js` deprecado | Global | moment está en modo mantenimiento. La app lo usa para formatear fechas y en el DatePicker. Migrar a `dayjs` (que ya usa Ant Design internamente). |
+| ~~`moment.js` deprecado~~ ✅ Resuelto | Global | **Tarea 1.D cerrada (2026-05-09):** migrado a `dayjs` (transitivo de antd v5). Plugin `customParseFormat` y locale `es` cargados desde `src/utils/dayjs.js`. Bundle gzip -19 KB. |
 
 ### Medio
 
@@ -203,7 +203,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 - ~~`helpers.js` tiene ~60 líneas de código comentado al final~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
 - ~~`LendsList.js` tiene ~85 líneas de código comentado~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
 - ~~`console.log` en 3+ archivos que llegan a producción~~ ✅ Resuelto (Tarea 1.B, 2026-05-09).
-- `moment.js` en lugar de `dayjs`.
+- ~~`moment.js` en lugar de `dayjs`~~ ✅ Resuelto (Tarea 1.D, 2026-05-09).
 - ~~3 APIs deprecadas de Ant Design 5 generando warnings silenciosos~~ ✅ Resuelto (Tarea 1.C, 2026-05-09).
 - `company` como string libre sin validación ni enum → riesgo de datos corruptos.
 - No hay tests de ningún tipo más allá del boilerplate de CRA (`App.test.js` vacío).

@@ -1,7 +1,6 @@
 import React from "react";
 import { DatePicker, Button } from "antd";
 import { isMobile } from "react-device-detect";
-// import moment from "moment";
 
 const { RangePicker } = DatePicker;
 

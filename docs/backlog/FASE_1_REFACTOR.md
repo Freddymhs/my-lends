@@ -41,15 +41,16 @@
   - `<Tabs><TabPane tab>...</TabPane></Tabs>` + `const { TabPane } = Tabs` → `<Tabs items={[{ key, label, children }]} />`.
 - **Resultado:** build pasa sin warnings de antd deprecation. La sintaxis nueva de Tabs es más declarativa (+10 líneas netas).
 
-### Tarea 1.D: Migrar moment.js → dayjs
+### Tarea 1.D: ✅ Resuelto (2026-05-09) — Migrar moment.js → dayjs
 
-- **Archivos:** `src/helpers.js`, `src/components/Home/LendsList.js`, `src/components/Home/AddLoanModal.js`
-- **Qué hacer:**
-  - Instalar `dayjs` (ya incluido por Ant Design 5, solo importar)
-  - Reemplazar `import moment from 'moment'` por `import dayjs from 'dayjs'`
-  - Reemplazar `import 'moment/locale/es'` por `import 'dayjs/locale/es'; dayjs.locale('es')`
-  - Adaptar los formatos: `moment(x, fmt)` → `dayjs(x, fmt)`, `.format()` igual
-  - Desinstalar `moment` del `package.json`
+- **Archivos modificados:** `src/utils/dayjs.js` (nuevo), `src/helpers.js`, `src/components/Home/LendsList.js`, `src/components/Home/AddLoanModal.js`, `src/components/DateRangeFilter.js`, `package.json`, `package-lock.json`
+- **Implementación:**
+  - Creado `src/utils/dayjs.js` que carga el plugin `customParseFormat` y `locale "es"` una sola vez. Todos los archivos importan desde aquí (evita parses inválidos por plugin no cargado).
+  - 9 ocurrencias de `moment` migradas. Bug fix incidental en `LendsList.js`: el formato truncado `"DD-MM"` (que moment toleraba) reemplazado por el formato completo `"DD-MM-YYYY HH:mm:ss"` consistente con el input real.
+  - Línea comentada `// import moment` eliminada en `DateRangeFilter.js`.
+  - `npm uninstall moment` ejecutado. `dayjs` ahora viene transitivo desde antd v5.
+- **Resultado:** bundle gzip **433.66 KB → 414.42 KB** (-19.24 KB / -4.4 %).
+- **Convención persistida:** `CLAUDE.md` documenta usar `import dayjs from "<...>/utils/dayjs"` siempre.
 
 ### Tarea 1.E: Extraer lógica de Home.js a custom hooks
 

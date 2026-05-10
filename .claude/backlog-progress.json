@@ -4,7 +4,7 @@
   "current_phase": "FASE_1",
   "phases": {
     "FASE_0": { "status": "completed", "name": "Bugs Críticos", "tasks": 3, "completed_tasks": ["0.A", "0.B", "0.C"] },
-    "FASE_1": { "status": "in_progress", "name": "Refactor & Limpieza", "tasks": 7, "completed_tasks": ["1.A", "1.B", "1.C"] },
+    "FASE_1": { "status": "in_progress", "name": "Refactor & Limpieza", "tasks": 7, "completed_tasks": ["1.A", "1.B", "1.C", "1.D"] },
     "FASE_2": { "status": "pending", "name": "Company Self-Assignment + Modo Personal", "tasks": 5 },
     "FASE_3": { "status": "pending", "name": "Features Nuevas (placeholder)", "tasks": 0 },
     "FASE_4": { "status": "pending", "name": "UI/UX Polish", "tasks": 6 },

@@ -10,7 +10,7 @@
 | Fase | Nombre | Estado | Prioridad |
 |------|--------|--------|-----------|
 | [FASE 0](FASE_0_BUGS_CRITICOS.md) | Bugs Críticos | ✅ COMPLETADA (3/3) | 🔴 Alta |
-| [FASE 1](FASE_1_REFACTOR.md) | Refactor & Limpieza | 🔄 EN PROGRESO (3/7) | 🔴 Alta |
+| [FASE 1](FASE_1_REFACTOR.md) | Refactor & Limpieza | 🔄 EN PROGRESO (4/7) | 🔴 Alta |
 | [FASE 2](FASE_2_COMPANY_FEATURE.md) | Company Self-Assignment + Modo Personal | ⏸️ PENDIENTE | 🔴 Alta |
 | [FASE 3](FASE_3_FEATURES.md) | Features Nuevas (placeholder) | ⏸️ PENDIENTE | 🟡 Media |
 | [FASE 4](FASE_4_UIUX.md) | UI/UX Polish | ⏸️ PENDIENTE | 🟡 Media |

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, DatePicker, InputNumber, Select } from "antd";
-import moment from "moment";
+import dayjs from "../../utils/dayjs";
 import { auth } from "../../firebase-config";
 import { isMobile } from "react-device-detect";
 import { PlusOutlined } from "@ant-design/icons";
@@ -20,7 +20,7 @@ const AddLoanModal = ({
   const [toCompany, setToCompany] = useState("");
 
   const initialValues = {
-    date: moment(),
+    date: dayjs(),
     from: auth.currentUser?.uid,
     fromCompany: actualCompanyIs,
     name: "",
@@ -99,7 +99,7 @@ const AddLoanModal = ({
             <DatePicker
               format="DD-MM-YYYY HH:mm:ss"
               showTime={{
-                defaultValue: moment(),
+                defaultValue: dayjs(),
               }}
             />
           </Form.Item>
