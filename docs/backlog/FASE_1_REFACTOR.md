@@ -32,13 +32,14 @@
 - **Convención persistida:** `CLAUDE.md` sección "Logging convention" documenta la regla.
 - **Resultado:** -10 líneas. Bundle gzip -126 B.
 
-### Tarea 1.C: Reemplazar APIs deprecadas de Ant Design 5
+### Tarea 1.C: ✅ Resuelto (2026-05-09) — Reemplazar APIs deprecadas de Ant Design 5
 
-- **Archivos:** `src/components/Home/AddLoanModal.js`, `src/components/Home/LogOutDropdown.js`, `src/pages/Home.js`
-- **Qué hacer:**
-  - `AddLoanModal.js:72`: `visible` → `open`
-  - `LogOutDropdown.js:42`: `overlay={<Menu>}` → prop `menu={{ items: menuItems, onClick: handleMenuClick }}`
-  - `Home.js`: reemplazar `<TabPane>` por array `items` en `<Tabs>`
+- **Archivos modificados:** `src/components/Home/AddLoanModal.js`, `src/components/Home/LogOutDropdown.js`, `src/pages/Home.js`
+- **Implementación:**
+  - `<Modal visible>` → `<Modal open>`. Renombrado también el state interno (`visible/setVisible` → `open/setOpen`) en `AddLoanModal` y `Home` para coherencia padre↔hijo.
+  - `<Dropdown overlay={<Menu items=... onClick=.../>}>` → `<Dropdown menu={{ items, onClick }}>`. Import de `Menu` removido (era el único consumidor).
+  - `<Tabs><TabPane tab>...</TabPane></Tabs>` + `const { TabPane } = Tabs` → `<Tabs items={[{ key, label, children }]} />`.
+- **Resultado:** build pasa sin warnings de antd deprecation. La sintaxis nueva de Tabs es más declarativa (+10 líneas netas).
 
 ### Tarea 1.D: Migrar moment.js → dayjs
 

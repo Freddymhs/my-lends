@@ -187,7 +187,7 @@
 | 12 | Cancelar `setTimeout` de getOut en cleanup | Home.js:142-163 | 5 min | Alto (bug B4) |
 | 13 | `keys` por id estable en `.map()` | LendsList/Home | 10 min | Medio |
 | 14 | Borrar `react-router`, `react-swipeable`, 7 workbox-* | package.json | 5 min + npm install | Medio bundle |
-| 15 | `Modal visible` → `open`, `Dropdown overlay` → `menu`, `Tabs.TabPane` → `items` | AddLoanModal/LogOut/Home | 15 min | Medio |
+| ~~15~~ ✅ | ~~`Modal visible` → `open`, `Dropdown overlay` → `menu`, `Tabs.TabPane` → `items`~~ | AddLoanModal/LogOut/Home | Resuelto (Tarea 1.C) | — |
 | 16 | `localStorage` key `"user"` → `"lends:user:v1"` | UserContext.js | 3 min | Medio |
 | 17 | Fix `manifest.json`: doble slash, MIME, screenshots | public/manifest.json | 5 min | Alto Lighthouse |
 | 18 | `"engines"` + `"homepage"` en package.json | package.json | 3 min | Bajo |

@@ -9,9 +9,9 @@ import { Button } from "antd";
 const { Option } = Select;
 
 const AddLoanModal = ({
-  visible,
+  open,
   onCreate,
-  setVisible,
+  setOpen,
   users,
   actualCompanyIs,
   company,
@@ -40,7 +40,7 @@ const AddLoanModal = ({
     try {
       const values = await form.validateFields();
       onCreate(values);
-      setVisible(false);
+      setOpen(false);
       form.resetFields();
     } catch {
       // antd Form.validateFields rejects when there are validation errors;
@@ -49,7 +49,7 @@ const AddLoanModal = ({
   };
 
   const handleCancel = () => {
-    setVisible(false);
+    setOpen(false);
     form.resetFields();
   };
 
@@ -67,11 +67,11 @@ const AddLoanModal = ({
           className={isMobile ? "floating-button-mobile" : "floating-button"}
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => setVisible(!visible)}
+          onClick={() => setOpen(!open)}
         />
       </div>
       <Modal
-        visible={visible}
+        open={open}
         title="Crear Préstamo"
         okText="Agregar"
         cancelText="Cancelar"

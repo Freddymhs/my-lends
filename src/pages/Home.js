@@ -29,11 +29,9 @@ import HeaderApp from "../components/Home/HeaderApp";
 import NoCompanyAlert from "../components/Home/NoCompanyAlert";
 import { useNavigate } from "react-router-dom";
 
-const { TabPane } = Tabs;
-
 const Home = () => {
   const [users, setUsers] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(UserContext);
   const { company } = user || {};
@@ -322,34 +320,46 @@ const Home = () => {
       {/*  */}
       <NoCompanyAlert company={company} />
       {/*  */}
-      <Tabs centered defaultActiveKey="1">
-        <TabPane tab="Prestamos" key="1">
-          <LendsList
-            data={returnData}
-            allUsersInFirebase={users}
-            trailingActions={trailingActions}
-            leadingActions={leadingActions}
-            formatUser={findToUserName}
-            showLeadingActions={false}
-          />
-        </TabPane>
-        <TabPane tab="Deudas" key="2">
-          <LendsList
-            data={belongsData}
-            allUsersInFirebase={users}
-            trailingActions={trailingActions}
-            leadingActions={leadingActions}
-            formatUser={findFromUserName}
-            showTrailingActions={false}
-          />
-        </TabPane>
-      </Tabs>
+      <Tabs
+        centered
+        defaultActiveKey="1"
+        items={[
+          {
+            key: "1",
+            label: "Prestamos",
+            children: (
+              <LendsList
+                data={returnData}
+                allUsersInFirebase={users}
+                trailingActions={trailingActions}
+                leadingActions={leadingActions}
+                formatUser={findToUserName}
+                showLeadingActions={false}
+              />
+            ),
+          },
+          {
+            key: "2",
+            label: "Deudas",
+            children: (
+              <LendsList
+                data={belongsData}
+                allUsersInFirebase={users}
+                trailingActions={trailingActions}
+                leadingActions={leadingActions}
+                formatUser={findFromUserName}
+                showTrailingActions={false}
+              />
+            ),
+          },
+        ]}
+      />
       {/*  */}
       <AddLoanModal
         company={company}
         users={users}
-        visible={visible}
-        setVisible={setVisible}
+        open={open}
+        setOpen={setOpen}
         actualCompanyIs={company}
         onCreate={addNewItemToDatabase}
       />

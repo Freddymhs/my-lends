@@ -1,4 +1,4 @@
-import { Dropdown, Button, Menu } from "antd";
+import { Dropdown, Button } from "antd";
 import { signOut } from "firebase/auth";
 import { useCallback, useContext } from "react";
 import { useNavigate } from "react-router";
@@ -38,7 +38,7 @@ const LogoutDropdown = () => {
 
   return (
     <Dropdown
-      overlay={<Menu items={menuItems} onClick={handleMenuClick} />}
+      menu={{ items: menuItems, onClick: handleMenuClick }}
       trigger={["click"]}
     >
       <Button size="large" type="primary" icon={<LogoutOutlined />} />

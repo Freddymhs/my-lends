@@ -194,7 +194,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 |---|---|---|
 | `visible` prop deprecated | `AddLoanModal.js:72` | Ant Design 5 cambió `visible` por `open` en `Modal`. Genera warning en consola. |
 | `overlay` deprecated | `LogOutDropdown.js:42` | `Dropdown` con `overlay` está deprecado en Ant Design 5. Usar `menu` prop. |
-| `TabPane` deprecated | `Home.js:335,340` | `Tabs.TabPane` está deprecado. Usar `items` prop en `Tabs`. |
+| ~~`TabPane` deprecated~~ ✅ Resuelto | `Home.js` | Migrado a `<Tabs items={[...]} />` (Tarea 1.C, 2026-05-09). También `<Modal visible>` → `<Modal open>` y `<Dropdown overlay>` → `menu`. |
 
 ---
 
@@ -204,7 +204,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 - ~~`LendsList.js` tiene ~85 líneas de código comentado~~ ✅ Resuelto (Tarea 1.A, 2026-05-09).
 - ~~`console.log` en 3+ archivos que llegan a producción~~ ✅ Resuelto (Tarea 1.B, 2026-05-09).
 - `moment.js` en lugar de `dayjs`.
-- 3 APIs deprecadas de Ant Design 5 generando warnings silenciosos.
+- ~~3 APIs deprecadas de Ant Design 5 generando warnings silenciosos~~ ✅ Resuelto (Tarea 1.C, 2026-05-09).
 - `company` como string libre sin validación ni enum → riesgo de datos corruptos.
 - No hay tests de ningún tipo más allá del boilerplate de CRA (`App.test.js` vacío).
 
@@ -233,7 +233,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **~~Prioridad 3 — Filtro de estados~~ ✅ Resuelto (2026-05-09)**: ~~revisar y corregir la lógica en `getDataFromFirebase`~~ — Tarea 0.C cerrada. El filtro siempre fue funcionalmente correcto; el cleanup eliminó la duplicación literal y renombró variables.
 
-**Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A); ~~eliminar `console.log` de producción~~ ✅ (Tarea 1.B); pendiente reemplazar APIs deprecadas de Ant Design 5 (Tarea 1.C).
+**Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A); ~~eliminar `console.log` de producción~~ ✅ (Tarea 1.B); ~~reemplazar APIs deprecadas de Ant Design 5~~ ✅ (Tarea 1.C).
 
 **Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios, y extraer lógica de `Home.js` a custom hooks.
 
