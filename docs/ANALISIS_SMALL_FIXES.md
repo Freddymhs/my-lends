@@ -25,7 +25,7 @@
 | B1 | `src/pages/Home.js:27` | Importa `Alert` de antd pero **no se usa** (delegado a `NoCompanyAlert`). |
 | B2 | `src/components/Home/LogOutDropdown.js:18` | `const { _, setUser } = useContext(UserContext)` — `_` es un nombre de variable real, no descarte. ESLint lo marca como unused. |
 | B3 | `src/components/Home/LogOutDropdown.js:4` | `useNavigate` importado de `"react-router"` mientras todo el resto del proyecto usa `"react-router-dom"`. |
-| B4 | `src/components/DateRangeFilter.js:4` | `react-device-detect` importado pero `isMobile` no se usa en este archivo. |
+| ~~B4~~ ✅ Resuelto (Tarea 1.F) | `src/components/DateRangeFilter.js` | Import muerto de `isMobile` eliminado el 2026-05-11. |
 
 ---
 
@@ -184,7 +184,7 @@
 | ~~9~~ ✅ | ~~Quitar 5 `console.log` con PII~~ | Login/Home/LogOut | Resuelto (Tarea 1.B) | — |
 | 10 | Cambiar `ref(database, "users/...")` por `${USERS_REF}/...` | Login.js:31 | 2 min | Bajo |
 | 11 | Consolidar `helpers.js` + `helpers/index.js` | src/ | 15 min | Alto mantenibilidad |
-| 12 | Cancelar `setTimeout` de getOut en cleanup | Home.js:142-163 | 5 min | Alto (bug B4) |
+| ~~12~~ ✅ | ~~Cancelar `setTimeout` de getOut en cleanup~~ | Home.js | Resuelto incidentalmente en Tarea 1.E (2026-05-10) | — |
 | 13 | `keys` por id estable en `.map()` | LendsList/Home | 10 min | Medio |
 | 14 | Borrar `react-router`, `react-swipeable`, 7 workbox-* | package.json | 5 min + npm install | Medio bundle |
 | ~~15~~ ✅ | ~~`Modal visible` → `open`, `Dropdown overlay` → `menu`, `Tabs.TabPane` → `items`~~ | AddLoanModal/LogOut/Home | Resuelto (Tarea 1.C) | — |

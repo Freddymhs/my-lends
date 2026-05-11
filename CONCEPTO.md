@@ -151,7 +151,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 |---|---|---|
 | `Home` | `pages/Home.js` (~262 líneas) | Orquestador principal. Maneja UI, filtros, confirmaciones y expulsión por sin-company. Las suscripciones Firebase viven en `src/hooks/useUsers.js` y `src/hooks/useLends.js`. |
 | `LendsList` | `components/Home/LendsList.js` (~252 líneas) | Lista renderizada con Collapse + Swipeable. Incluye lógica de estado visual (íconos) y historial de cambios. |
-| `AddLoanModal` | `components/Home/AddLoanModal.js` | Formulario de creación. Filtra usuarios por empresa. `toCompany` se sincroniza manualmente al form. |
+| `AddLoanModal` | `components/Home/AddLoanModal.js` | Formulario de creación. Filtra usuarios por empresa. `toCompany` lo gestiona directamente el antd Form (sin state duplicado, post Tarea 1.F). |
 | `HeaderApp` | `components/Home/HeaderApp.js` | Header con logout y toggle de columnas mobile. |
 | `Filters` | `Filters.js` | TreeSelect multicheck para filtrar por estado. |
 | `DateRangeFilter` | `components/DateRangeFilter.js` | RangePicker con botones Filtrar/Quitar. |
@@ -184,7 +184,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 | Área | Archivo | Razón |
 |---|---|---|
 | `LendsList` con código muerto | `components/Home/LendsList.js:244–329` | ~85 líneas comentadas de la implementación con `Card` anterior. Aumenta el tamaño del archivo sin valor. |
-| `toCompany` sincronización manual | `AddLoanModal.js:156–157` | `toCompany` se guarda en estado local Y en el form (`setFieldsValue`). Si hay un error en el `onChange`, queda desincronizado. |
+| ~~`toCompany` sincronización manual~~ ✅ Resuelto | `AddLoanModal.js` | **Tarea 1.F cerrada (2026-05-11):** state local `[toCompany, setToCompany]` eliminado. El antd Form es la única fuente de verdad. |
 | ~~`console.log` en producción~~ ✅ Resuelto | varios | **Tarea 1.B cerrada (2026-05-09):** 8 `console.log` eliminados (en `Login`, `Home`, `LogOutDropdown`, `DateRangeFilter`) + 1 `console.log` ascendido a `console.error` con mensaje descriptivo. Quedan 5 `console.error` en catches genuinos hasta tener logger central (FASE 5/6). |
 | `let` implícito en modal | `Home.js:71` | `let comment = ""` dentro del `content` del Modal — muta una variable de closure. Funciona, pero es frágil si el modal se re-renderiza. |
 

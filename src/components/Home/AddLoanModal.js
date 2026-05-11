@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Form, Input, DatePicker, InputNumber, Select } from "antd";
 import dayjs from "../../utils/dayjs";
 import { auth } from "../../firebase-config";
@@ -17,7 +17,6 @@ const AddLoanModal = ({
   company,
 }) => {
   const [form] = Form.useForm();
-  const [toCompany, setToCompany] = useState("");
 
   const initialValues = {
     date: dayjs(),
@@ -154,7 +153,6 @@ const AddLoanModal = ({
             <Select
               placeholder="Selecciona el destinatario"
               onChange={(_, args) => {
-                setToCompany(args?.toCompany);
                 form.setFieldsValue({ toCompany: args?.toCompany });
               }}
             >

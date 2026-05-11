@@ -63,12 +63,17 @@
 - **Resultado:** Home.js de **366 → 262 líneas**. Warnings ESLint exhaustive-deps **3 → 1** (queda solo `LogOutDropdown:28`, scope de 1.F).
 - **Cambio de comportamiento conocido:** el `setUser({})` que el código original ejecutaba en el error path de `getUsersInFirebase` (Home.js:179) NO se migró al hook. Decisión consciente: el comportamiento era un side effect raro (logout parcial en error de fetch). Ahora el usuario se queda en `/lends` con users vacíos si `/users` falla.
 
-### Tarea 1.F: Corregir useCallback y useEffect dependencies
+### Tarea 1.F: ✅ Resuelto (2026-05-11) — Corregir useCallback y useEffect dependencies
 
-- **Archivos:** `src/components/Home/LogOutDropdown.js:29`, `src/pages/Home.js:163`, `src/pages/Home.js:256`
-- **Qué hacer:**
-  - `LogOutDropdown`: agregar `setUser` a deps de `useCallback` (estable porque viene de Context)
-  - `Home.js:163`: evaluar si agregar `navigate` y `setUser` o estabilizar con `useRef`
+- **Archivos modificados:** `src/components/Home/LogOutDropdown.js`, `src/components/DateRangeFilter.js`, `src/components/Home/AddLoanModal.js`
+- **Implementación:**
+  - `LogOutDropdown.js:28`: agregado `setUser` a deps de `useCallback`. `setUser` es referencialmente estable (context setter) → safe.
+  - **2 de los 3 warnings originales** (Home.js:163, Home.js:256) ya habían desaparecido al extraer effects a hooks en Tarea 1.E. Solo quedaba LogOutDropdown.
+  - **Scope expandido**: tras cerrar exhaustive-deps, asomaron 2 warnings `no-unused-vars` previamente enmascarados:
+    - `DateRangeFilter.js`: import muerto de `isMobile` removido (matchea FASE 7.B item B4).
+    - `AddLoanModal.js`: state `[toCompany, setToCompany]` duplicado del antd Form removido (antipatrón); también `useState` import muerto. Elimina re-renders innecesarios y riesgo de desincronización.
+- **Resultado:** build **`Compiled successfully` con 0 warnings** por primera vez en la sesión.
+- **Convención persistida:** `CLAUDE.md` sección "antd Form state convention" documenta no duplicar campos del form en `useState` paralelo.
   - `Home.js:256`: agregar `setUser` — verificar que no genera loop (depende de la tarea 1.E)
 
 ### Tarea 1.G: Refactorizar let mutable en modal de cambio de estado

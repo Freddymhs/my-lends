@@ -44,6 +44,8 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Library initialization hubs:** las librerías que requieren init en runtime (plugins, locale, polyfills) viven en `src/utils/<lib>.js`. El resto del código importa desde el hub, no directo. Ejemplo: `dayjs` en `src/utils/dayjs.js`. Mantener esta convención al integrar nuevas libs con setup.
 
+**antd Form state convention:** con `antd` `Form`, el formulario es la única fuente de verdad de sus campos. NO duplicar valores en `useState` paralelo + `form.setFieldsValue`. Si se necesita reaccionar al cambio de un campo usar `Form.useWatch` o leer del form en submit. Antipatrón eliminado en Tarea 1.F sobre `toCompany` en `AddLoanModal`.
+
 ## Project documentation
 
 - **Backlog**: 7 fases en `docs/backlog/FASE_*.md` + `docs/backlog/README.md`. Tracking en `.claude/backlog-progress.json` (versionado). Antes de proponer trabajo nuevo, revisar si ya está fichado.

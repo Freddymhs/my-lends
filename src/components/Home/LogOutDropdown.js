@@ -25,7 +25,7 @@ const LogoutDropdown = () => {
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  }, [navigate]);
+  }, [navigate, setUser]);
 
   const handleMenuClick = useCallback(
     (event) => {

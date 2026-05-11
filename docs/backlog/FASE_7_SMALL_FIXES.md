@@ -30,7 +30,7 @@
   - `Home.js:27` — eliminar import `Alert` (no se usa). ⤴︎ ya cubierto en 1.A.
   - `LogOutDropdown.js:18` — eliminar `_` del destructuring (`const { _, setUser }` → `const { setUser }`). ⤴︎ ya cubierto en 1.A.
   - `LogOutDropdown.js:4` — cambiar `import { useNavigate } from "react-router"` → `from "react-router-dom"` (consistencia).
-  - `DateRangeFilter.js:4` — verificar/eliminar import de `react-device-detect` si `isMobile` no se usa.
+  - ~~`DateRangeFilter.js:4` — verificar/eliminar import de `react-device-detect` si `isMobile` no se usa.~~ ✅ Resuelto en Tarea 1.F (2026-05-11).
 - **Resultado esperado:** 0 imports no usados; 1 sola fuente de `react-router-dom`.
 
 ---
