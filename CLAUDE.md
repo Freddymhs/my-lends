@@ -42,6 +42,8 @@ Firebase config requires a `.env` file with `REACT_APP_FIREBASE_*` variables (se
 
 **Fechas:** usar `import dayjs from "<ruta>/utils/dayjs"` (carga `customParseFormat` plugin + locale `es` una sola vez). No importar `dayjs` directo desde otros archivos — el util central garantiza que el plugin de parse esté cargado.
 
+**Library initialization hubs:** las librerías que requieren init en runtime (plugins, locale, polyfills) viven en `src/utils/<lib>.js`. El resto del código importa desde el hub, no directo. Ejemplo: `dayjs` en `src/utils/dayjs.js`. Mantener esta convención al integrar nuevas libs con setup.
+
 ## Project documentation
 
 - **Backlog**: 7 fases en `docs/backlog/FASE_*.md` + `docs/backlog/README.md`. Tracking en `.claude/backlog-progress.json` (versionado). Antes de proponer trabajo nuevo, revisar si ya está fichado.

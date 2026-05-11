@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import IsLoadingScreen from "../components/IsLoadingScreen";
-import { Tabs, Input } from "antd";
+import { Tabs, Input, Modal, message } from "antd";
 import { isMobile } from "react-device-detect";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
-import { message } from "antd";
 import {
   TrailingActions,
   SwipeAction,
@@ -14,31 +13,27 @@ import "react-swipeable-list/dist/styles.css";
 import "../styles/FloatingButton.css";
 import {
   addNewItemToDatabase,
-  getDataFromFirebase,
-  getUsersInFirebase,
   changeStateOfItemInDatabase,
 } from "../helpers";
 import AddLoanModal from "../components/Home/AddLoanModal";
 import { UserContext } from "../UserContext";
 import DateRangeFilter from "../components/DateRangeFilter";
 import Filters from "../Filters";
-import { Modal } from "antd";
 import { findToUserName, findFromUserName } from "../helpers/index";
 import LendsList from "../components/Home/LendsList";
 import HeaderApp from "../components/Home/HeaderApp";
 import NoCompanyAlert from "../components/Home/NoCompanyAlert";
 import { useNavigate } from "react-router-dom";
+import useUsers from "../hooks/useUsers";
+import useLends from "../hooks/useLends";
+
+const EXPULSION_DELAY_MS = 4000;
 
 const Home = () => {
-  const [users, setUsers] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(UserContext);
-  const { company } = user || {};
-  const { uid } = user || {};
-  const { displayName } = user || {};
-  const [returnData, setReturnData] = useState([]);
-  const [belongsData, setBelongsData] = useState([]);
+  const { uid, company, displayName } = user || {};
+
+  const [open, setOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
@@ -49,6 +44,34 @@ const Home = () => {
     deleted: false,
   });
   const navigate = useNavigate();
+
+  const { users } = useUsers(uid);
+  const { returnData, belongsData, loading } = useLends(
+    uid,
+    company,
+    startDate,
+    endDate,
+    filterType
+  );
+
+  // Expulsa al usuario sin company tras un delay (UX, no security boundary).
+  useEffect(() => {
+    const isMissingCompany =
+      !company || company === "null" || company === "";
+    if (!uid || !isMissingCompany) return undefined;
+
+    const timeoutId = setTimeout(async () => {
+      setUser(null);
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+      navigate("/");
+    }, EXPULSION_DELAY_MS);
+
+    return () => clearTimeout(timeoutId);
+  }, [uid, company, navigate, setUser]);
 
   const openDeleteConfirmation = (item) => {
     Modal.confirm({
@@ -69,7 +92,7 @@ const Home = () => {
     });
   };
 
-  const openChangeStateConfirmation = (item, uid) => {
+  const openChangeStateConfirmation = (item) => {
     let comment = "";
     Modal.confirm({
       title: "Confirmar cambio de estado",
@@ -79,12 +102,7 @@ const Home = () => {
             `Este cambio lo marcará como regresado por ${displayName} y puedes agregar un comentario`}
           {item.returned &&
             `Este cambio lo desmarcará como regresado por ${displayName} y puedes agregar un comentario`}
-          <p
-            style={{
-              color: "#ff7043",
-              fontSize: "18px",
-            }}
-          >
+          <p style={{ color: "#ff7043", fontSize: "18px" }}>
             Historial de cambios:
           </p>
           {item.comment?.split("\n").map((line, index) => (
@@ -131,118 +149,7 @@ const Home = () => {
       onCancel() {},
     });
   };
-  useEffect(() => {
-    if (!user?.company || user.company === "null" || user.company === "") {
-      const getOut = () => {
-        try {
-          setTimeout(async () => {
-            setUser(null);
-            setUsers([]);
-            setReturnData([]);
-            setBelongsData([]);
-            setLoading(false);
-            await signOut(auth);
-            navigate("/");
-          }, 4000);
-        } catch (error) {
-          console.error("Error signing out:", error);
-        }
-      };
-      getOut();
-      return;
-    }
-  }, [user]);
 
-  useEffect(() => {
-    let unsubscribeLeads = () => {};
-    let unsubscribeUsers = () => {};
-
-    const loadData = async () => {
-      if (uid) {
-        setLoading(true);
-        try {
-          unsubscribeUsers = getUsersInFirebase(
-            (data) => {
-              const userDataFromUserLogged = data.filter(
-                ({ uid }) => uid === user.uid
-              )[0];
-
-              // Actualizar la lista de usuarios y el usuario en memoria
-              setUsers(data);
-              setUser({
-                ...user,
-                ...userDataFromUserLogged,
-              });
-            },
-            (errorMessage) => {
-              setUsers([]);
-              setUser({});
-              message.error({
-                content: errorMessage.message,
-                duration: 4,
-                style: {
-                  position: "fixed",
-                  top: 10,
-                  right: 10,
-                  zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
-                  padding: "10px",
-                  borderRadius: 4,
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                },
-              });
-            }
-          );
-
-          unsubscribeLeads = getDataFromFirebase(
-            (lends) => {
-              const myLends = lends.filter(
-                (item) => item.fromCompany === company
-              );
-              const mybelongs = lends.filter(
-                (item) => item.toCompany === company
-              );
-
-              setReturnData(myLends);
-              setBelongsData(mybelongs);
-              setLoading(false);
-            },
-            (errorMessage) => {
-              setReturnData([]);
-              setBelongsData([]);
-              setLoading(false);
-              message.error({
-                content: errorMessage.message,
-                duration: 6,
-                style: {
-                  position: "fixed",
-                  top: 10,
-                  right: 10,
-                  zIndex: 1000, // Asegúrate de que el mensaje esté por encima de otros elementos
-                  padding: "10px",
-                  borderRadius: 4,
-                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                },
-              });
-            },
-            startDate,
-            endDate,
-            filterType
-          );
-        } catch (error) {
-          console.error("Error fetching lends/users:", error);
-        }
-      } else {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-
-    return () => {
-      unsubscribeLeads();
-      unsubscribeUsers();
-    };
-  }, [uid, startDate, endDate, company, filterType]);
   const handleFilter = (newStartDate, newEndDate) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -254,45 +161,35 @@ const Home = () => {
         destructive={false}
         onClick={() => openDeleteConfirmation(item)}
       >
-        <div
-          style={{
-            backgroundColor: "red",
-            color: "white",
-            // padding: 10,
-            fontSize: 18,
-          }}
-        >
+        <div style={{ backgroundColor: "red", color: "white", fontSize: 18 }}>
           Borrar elemento
         </div>
       </SwipeAction>
     </TrailingActions>
   );
+
   const leadingActions = (item) => (
     <LeadingActions>
       <SwipeAction
         destructive={false}
-        onClick={() => openChangeStateConfirmation(item, uid)}
+        onClick={() => openChangeStateConfirmation(item)}
       >
         <div
-          style={{
-            backgroundColor: "#ff7043",
-            color: "white",
-            // padding: 10,
-            fontSize: 18,
-          }}
+          style={{ backgroundColor: "#ff7043", color: "white", fontSize: 18 }}
         >
           Marcar como regresado
         </div>
       </SwipeAction>
     </LeadingActions>
   );
+
   if (loading) {
     return <IsLoadingScreen loading={loading} />;
   }
+
   return (
     <>
       <HeaderApp />
-      {/*  */}
       <div
         style={{
           display: "flex",
@@ -300,7 +197,6 @@ const Home = () => {
           gap: 8,
         }}
       >
-        {" "}
         <Filters setFilterType={setFilterType} filterType={filterType} />
       </div>
       <div
@@ -316,10 +212,7 @@ const Home = () => {
           setDateRange={setDateRange}
         />
       </div>
-
-      {/*  */}
       <NoCompanyAlert company={company} />
-      {/*  */}
       <Tabs
         centered
         defaultActiveKey="1"
@@ -354,7 +247,6 @@ const Home = () => {
           },
         ]}
       />
-      {/*  */}
       <AddLoanModal
         company={company}
         users={users}

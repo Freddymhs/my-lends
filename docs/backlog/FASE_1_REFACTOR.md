@@ -52,13 +52,16 @@
 - **Resultado:** bundle gzip **433.66 KB → 414.42 KB** (-19.24 KB / -4.4 %).
 - **Convención persistida:** `CLAUDE.md` documenta usar `import dayjs from "<...>/utils/dayjs"` siempre.
 
-### Tarea 1.E: Extraer lógica de Home.js a custom hooks
+### Tarea 1.E: ✅ Resuelto (2026-05-10) — Extraer lógica de Home.js a custom hooks
 
-- **Archivos:** `src/hooks/useLends.js` (crear), `src/hooks/useUsers.js` (crear), `src/pages/Home.js` (modificar)
-- **Qué hacer:**
-  - `useLends(uid, company, startDate, endDate, filterType)` → encapsula la suscripción a Firebase de préstamos y retorna `{ returnData, belongsData, loading }`
-  - `useUsers(uid)` → encapsula la suscripción a Firebase de usuarios y retorna `{ users }`
-  - `Home.js` queda solo como orquestador de UI y confirmaciones
+- **Archivos modificados:** `src/hooks/useLends.js` (nuevo), `src/hooks/useUsers.js` (nuevo), `src/utils/toastStyle.js` (nuevo), `src/pages/Home.js` (modificado)
+- **Implementación:**
+  - `useUsers(uid)`: suscribe a `/users`, retorna `{ users }`. Usa `setUser(prev => ({...prev, ...me}))` para sincronizar profile sin dependerse de `user` (evita loop).
+  - `useLends(uid, company, startDate, endDate, filterType)`: suscribe a `/lends`, retorna `{ returnData, belongsData, loading }`.
+  - `TOAST_STYLE` centralizado en `src/utils/toastStyle.js` (precondición para FASE 7.D que consolidará los 6 toasts duplicados restantes).
+  - Effect de expulsión por sin-company refactorizado con `clearTimeout` cleanup y constante `EXPULSION_DELAY_MS = 4000` (fija incidentalmente el bug B4 — timer fantasma post-logout).
+- **Resultado:** Home.js de **366 → 262 líneas**. Warnings ESLint exhaustive-deps **3 → 1** (queda solo `LogOutDropdown:28`, scope de 1.F).
+- **Cambio de comportamiento conocido:** el `setUser({})` que el código original ejecutaba en el error path de `getUsersInFirebase` (Home.js:179) NO se migró al hook. Decisión consciente: el comportamiento era un side effect raro (logout parcial en error de fetch). Ahora el usuario se queda en `/lends` con users vacíos si `/users` falla.
 
 ### Tarea 1.F: Corregir useCallback y useEffect dependencies
 

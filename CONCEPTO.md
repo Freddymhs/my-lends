@@ -149,7 +149,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 | Componente | Archivo | Rol |
 |---|---|---|
-| `Home` | `pages/Home.js` (~366 líneas) | Orquestador principal. Maneja toda la lógica de estado, filtros, confirmaciones y suscripciones. |
+| `Home` | `pages/Home.js` (~262 líneas) | Orquestador principal. Maneja UI, filtros, confirmaciones y expulsión por sin-company. Las suscripciones Firebase viven en `src/hooks/useUsers.js` y `src/hooks/useLends.js`. |
 | `LendsList` | `components/Home/LendsList.js` (~252 líneas) | Lista renderizada con Collapse + Swipeable. Incluye lógica de estado visual (íconos) y historial de cambios. |
 | `AddLoanModal` | `components/Home/AddLoanModal.js` | Formulario de creación. Filtra usuarios por empresa. `toCompany` se sincroniza manualmente al form. |
 | `HeaderApp` | `components/Home/HeaderApp.js` | Header con logout y toggle de columnas mobile. |
@@ -175,7 +175,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 | Área | Archivo | Razón |
 |---|---|---|
 | `company` como string libre | DB `/users` | No hay enum ni validación. Si se escribe distinto (mayúsculas, espacios), los préstamos no matchean. Un typo rompe la multi-tenancy. |
-| `Home.js` sobrerecargado | `pages/Home.js` | 369 líneas con lógica de suscripción, confirmaciones modales, swipe handlers, filtros y navegación. Viola SRP. Difícil de testear y mantener. |
+| ~~`Home.js` sobrerecargado~~ ⚠️ Parcial | `pages/Home.js` | **Tarea 1.E cerrada (2026-05-10):** suscripciones Firebase extraídas a `src/hooks/useUsers.js` y `src/hooks/useLends.js`. Home pasó de 366 → 262 líneas. Aún quedan los 2 modales de confirmación inline (~80 líneas) que podrían extraerse en futura iteración. |
 | Historial de comentarios como string concatenado | `helpers.js:changeStateOfItemInDatabase` | El historial es `item.comment` con `\n` como separador. No es un array — no se puede iterar, ordenar ni paginar. Crece sin límite. |
 | ~~`moment.js` deprecado~~ ✅ Resuelto | Global | **Tarea 1.D cerrada (2026-05-09):** migrado a `dayjs` (transitivo de antd v5). Plugin `customParseFormat` y locale `es` cargados desde `src/utils/dayjs.js`. Bundle gzip -19 KB. |
 
@@ -235,7 +235,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 
 **Prioridad 4 — Limpieza de deuda**: ~~eliminar código comentado~~ ✅ (Tarea 1.A); ~~eliminar `console.log` de producción~~ ✅ (Tarea 1.B); ~~reemplazar APIs deprecadas de Ant Design 5~~ ✅ (Tarea 1.C).
 
-**Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios, y extraer lógica de `Home.js` a custom hooks.
+**Cuando el proyecto crezca**: migrar historial de cambios de string a array de objetos en DB, añadir validación de `company` al registrar usuarios. ~~Extraer lógica de `Home.js` a custom hooks~~ ✅ Resuelto (Tarea 1.E, 2026-05-10).
 
 ---
 
