@@ -59,48 +59,39 @@ export const getDataFromFirebase = (
     leadsQuery,
     (snapshot) => {
       const data = snapshot.val();
-      let lends = data
+      const rawLends = data
         ? Object.entries(data).map(([id, value]) => ({ id, ...value }))
         : [];
 
-      // Aplicar filtro de fechas si se proporcionan startDate y endDate
-      if (startDate && endDate) {
-        lends = lends.filter((item) => {
-          const itemDate = dayjs(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
-          return itemDate >= startDate && itemDate <= endDate;
-        });
-      }
+      const inDateRange = (item) => {
+        if (!startDate || !endDate) return true;
+        const itemDate = dayjs(item.date, "DD-MM-YYYY HH:mm:ss").toDate();
+        return itemDate >= startDate && itemDate <= endDate;
+      };
 
-      if (
-        filterType.notReturned ||
-        filterType.returned ||
-        filterType.deleted ||
-        filterType.wasReturned
-      ) {
-        const selectedNotReturned = filterType.notReturned;
-        const selectedReturned = filterType.returned;
-        const selectedDeleted = filterType.deleted;
-        const selectedWasReturned = filterType.wasReturned;
+      const noStateFilterSelected =
+        !filterType.notReturned &&
+        !filterType.returned &&
+        !filterType.deleted &&
+        !filterType.wasReturned;
 
-        lends = lends.filter((item) => {
-          const hasReturnedField = "returnedBy" in item;
-          const isCurrentlyReturned = hasReturnedField && item.returned === true;
-          const wasReturnedAndUndone = hasReturnedField && item.returned === false;
-          const isDeleted = item.deleted === true && Boolean(item.deletedBy);
-          const isUntouched = !hasReturnedField && !isDeleted;
+      const matchesStateFilter = (item) => {
+        if (noStateFilterSelected) return true;
+        const hasReturnedField = "returnedBy" in item;
+        const isCurrentlyReturned = hasReturnedField && item.returned === true;
+        const wasReturnedAndUndone = hasReturnedField && item.returned === false;
+        const isDeleted = item.deleted === true && Boolean(item.deletedBy);
+        const isUntouched = !hasReturnedField && !isDeleted;
+        return (
+          (filterType.notReturned && isUntouched) ||
+          (filterType.returned && !isDeleted && isCurrentlyReturned) ||
+          (filterType.wasReturned && !isDeleted && wasReturnedAndUndone) ||
+          (filterType.deleted && isDeleted)
+        );
+      };
 
-          return (
-            (selectedNotReturned && isUntouched) ||
-            (selectedReturned && !isDeleted && isCurrentlyReturned) ||
-            (selectedWasReturned && !isDeleted && wasReturnedAndUndone) ||
-            (selectedDeleted && isDeleted)
-          );
-        });
-      }
-
-      //  order by date descending
-      // lends.sort((a, b) => b.date.localeCompare(a.date));
-      lends.reverse();
+      // Reverse to show newest first (push IDs are roughly time-ordered).
+      const lends = rawLends.filter(inDateRange).filter(matchesStateFilter).reverse();
 
       callback(lends);
     },

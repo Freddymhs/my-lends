@@ -117,7 +117,7 @@
 | I4 | `src/components/Home/LendsList.js:104` | `<Collapse>` sin label de "ver historial" cuando está cerrado — usuario no sabe que hay más info. |
 | I5 | `src/pages/Home.js:67` | `comment: "deleted"` — string técnico aparece en historial visible al usuario como `"(HH:mm)displayName: deleted"`. |
 | I6 | `src/helpers.js:188` | Fallback de comment vacío es `"✉️"` — emoji aleatorio sin significado. Mejor `"(sin nota)"`. |
-| I7 | `src/pages/Home.js:78` | Modal de confirmación captura `comment` pero si el usuario cierra y reabre, queda residuo en `let comment` (closure). |
+| ~~I7~~ ✅ Resuelto (Tarea 1.G) | `src/pages/Home.js` | Reemplazado `let comment` por `useRef` con reset al abrir el modal — sin residuo entre invocaciones. |
 
 ---
 

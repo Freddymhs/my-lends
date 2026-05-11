@@ -76,20 +76,21 @@
 - **Convención persistida:** `CLAUDE.md` sección "antd Form state convention" documenta no duplicar campos del form en `useState` paralelo.
   - `Home.js:256`: agregar `setUser` — verificar que no genera loop (depende de la tarea 1.E)
 
-### Tarea 1.G: Refactorizar let mutable en modal de cambio de estado
+### Tarea 1.G: ✅ Resuelto (2026-05-11) — Refactorizar let mutable en modal de cambio de estado
 
-- **Archivo:** `src/pages/Home.js:71`
-- **Qué hacer:**
-  - `let comment = ""` dentro del `content` del Modal es una variable closure mutable.
-  - Usar `useRef` o extraer a un componente propio que maneje el estado del textarea internamente.
+- **Archivos modificados:** `src/pages/Home.js`, `src/helpers.js`
+- **Implementación:**
+  - `Home.js`: `let comment = ""` dentro de `openChangeStateConfirmation` reemplazado por `const commentRef = useRef("")` declarado a nivel componente. Reset al abrir el modal, mutación via `commentRef.current = e.target.value` en onChange, lectura en onOk.
+  - **Bonus**: `helpers.js` también tenía `let lends` con reasignaciones múltiples. Refactorizado a `const rawLends = ...` + chain `.filter(inDateRange).filter(matchesStateFilter).reverse()` con predicate functions nombradas.
+- **Resultado:** **0 `let` en todo `src/`** (regla global del usuario satisfecha). Build `Compiled successfully`, comportamiento idéntico.
 
 ---
 
-## Criterios de Aceptación
+## Criterios de Aceptación (cierre 2026-05-11)
 
-- [ ] `npm run build` compila sin ningún warning ni error
-- [ ] No hay `console.log` en archivos de `src/`
-- [ ] No hay warnings de Ant Design en consola del browser
-- [ ] `moment` eliminado del `package.json`
-- [ ] `Home.js` < 200 líneas (lógica de datos extraída a hooks)
-- [ ] Comportamiento de la app idéntico al anterior
+- [x] `npm run build` compila sin ningún warning ni error ✅
+- [x] No hay `console.log` en archivos de `src/` (solo `console.error` en catches genuinos) ✅
+- [x] No hay warnings de Ant Design en consola del browser ✅
+- [x] `moment` eliminado del `package.json` ✅
+- [ ] ~~`Home.js` < 200 líneas (lógica de datos extraída a hooks)~~ ⚠️ **No cumplido** — Home.js quedó en 262 líneas tras 1.E. Las suscripciones Firebase salieron a `useUsers`/`useLends`, pero los 2 modales de confirmación (~80 líneas inline JSX para `openChangeStateConfirmation`) siguen en el componente. Extraerlos requiere otra ronda — candidato para FASE 4 (UI/UX) o un sub-task futuro.
+- [x] Comportamiento de la app idéntico al anterior (excepto cambio consciente en 1.E: `setUser({})` removido del error path de `getUsersInFirebase`) ✅

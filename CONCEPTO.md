@@ -186,7 +186,7 @@ El botón flotante (+) para agregar préstamo tiene clases CSS distintas por pla
 | `LendsList` con código muerto | `components/Home/LendsList.js:244–329` | ~85 líneas comentadas de la implementación con `Card` anterior. Aumenta el tamaño del archivo sin valor. |
 | ~~`toCompany` sincronización manual~~ ✅ Resuelto | `AddLoanModal.js` | **Tarea 1.F cerrada (2026-05-11):** state local `[toCompany, setToCompany]` eliminado. El antd Form es la única fuente de verdad. |
 | ~~`console.log` en producción~~ ✅ Resuelto | varios | **Tarea 1.B cerrada (2026-05-09):** 8 `console.log` eliminados (en `Login`, `Home`, `LogOutDropdown`, `DateRangeFilter`) + 1 `console.log` ascendido a `console.error` con mensaje descriptivo. Quedan 5 `console.error` en catches genuinos hasta tener logger central (FASE 5/6). |
-| `let` implícito en modal | `Home.js:71` | `let comment = ""` dentro del `content` del Modal — muta una variable de closure. Funciona, pero es frágil si el modal se re-renderiza. |
+| ~~`let` implícito en modal~~ ✅ Resuelto | `Home.js` | **Tarea 1.G cerrada (2026-05-11):** reemplazado por `useRef`. Bonus: también eliminado el `let lends` en `helpers.js` con pipeline funcional. **0 `let` en todo `src/`**. |
 
 ### Bajo
 

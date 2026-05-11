@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import IsLoadingScreen from "../components/IsLoadingScreen";
 import { Tabs, Input, Modal, message } from "antd";
 import { isMobile } from "react-device-detect";
@@ -44,6 +44,7 @@ const Home = () => {
     deleted: false,
   });
   const navigate = useNavigate();
+  const commentRef = useRef("");
 
   const { users } = useUsers(uid);
   const { returnData, belongsData, loading } = useLends(
@@ -93,7 +94,7 @@ const Home = () => {
   };
 
   const openChangeStateConfirmation = (item) => {
-    let comment = "";
+    commentRef.current = "";
     Modal.confirm({
       title: "Confirmar cambio de estado",
       content: (
@@ -129,7 +130,7 @@ const Home = () => {
                 );
                 return;
               }
-              comment = e.target.value;
+              commentRef.current = e.target.value;
             }}
             rows={3}
           />
@@ -142,7 +143,7 @@ const Home = () => {
       onOk() {
         changeStateOfItemInDatabase(
           item,
-          { uid, displayName, comment },
+          { uid, displayName, comment: commentRef.current },
           "returned"
         );
       },
